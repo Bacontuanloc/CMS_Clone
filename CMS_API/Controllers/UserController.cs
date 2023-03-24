@@ -1,4 +1,5 @@
-﻿using CMS_API.Models;
+﻿using CMS_API.Entities;
+using CMS_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,32 +12,32 @@ namespace CMS_API.Controllers
     public class UserController : ControllerBase
     {
 
-        [HttpGet("Admins")]
-        [Authorize(Roles = "Administrator")]
+        [HttpGet("Teacher")]
+        [Authorize(Roles = "2")]
         public IActionResult AdminsEndpoint()
         {
             var currentUser = GetCurrentUser();
 
-            return Ok($"Hi {currentUser.GivenName}, you are an {currentUser.Role}");
+            return Ok($"Hi {currentUser.Username}, you are an {currentUser.RoleId}");
         }
 
 
-        [HttpGet("Sellers")]
-        [Authorize(Roles = "Seller")]
+        [HttpGet("Admin")]
+        [Authorize(Roles = "1")]
         public IActionResult SellersEndpoint()
         {
             var currentUser = GetCurrentUser();
 
-            return Ok($"Hi {currentUser.GivenName}, you are a {currentUser.Role}");
+            return Ok($"Hi {currentUser.Username}, you are a {currentUser.RoleId}");
         }
 
-        [HttpGet("AdminsAndSellers")]
-        [Authorize(Roles = "Administrator,Seller")]
+        [HttpGet("Student")]
+        [Authorize(Roles = "3")]
         public IActionResult AdminsAndSellersEndpoint()
         {
             var currentUser = GetCurrentUser();
 
-            return Ok($"Hi {currentUser.GivenName}, you are an {currentUser.Role}");
+            return Ok($"Hi {currentUser.Username}, you are an {currentUser.RoleId}");
         }
 
         [HttpGet("Public")]
@@ -45,7 +46,7 @@ namespace CMS_API.Controllers
             return Ok("Hi, you're on public property");
         }
 
-        private UserModel GetCurrentUser()
+        private User GetCurrentUser()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
 
@@ -53,13 +54,11 @@ namespace CMS_API.Controllers
             {
                 var userClaims = identity.Claims;
 
-                return new UserModel
+                return new User
                 {
                     Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-                    EmailAddress = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    GivenName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.GivenName)?.Value,
-                    Surname = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Surname)?.Value,
-                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+                    RoleId =int.Parse(userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value)
                 };
             }
             return null;

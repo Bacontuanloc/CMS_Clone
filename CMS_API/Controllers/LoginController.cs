@@ -1,4 +1,7 @@
 ﻿using CMS_API.Models;
+using CMS_API.Entities;
+using CMS_API.Repositories;
+using CMS_API.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +17,7 @@ namespace CMS_API.Controllers
     public class LoginController : ControllerBase
     {
         private IConfiguration _config;
+        private IUserRepository userRepository = new UserRepository();
 
         public LoginController(IConfiguration config)
         {
@@ -35,7 +39,7 @@ namespace CMS_API.Controllers
             return NotFound("User not found");
         }
 
-        private string Generate(UserModel user)
+        private string Generate(User user)
         {
            // var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
           //  var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -47,9 +51,10 @@ namespace CMS_API.Controllers
                             new Claim(JwtRegisteredClaimNames.Sub, _config["Jwt:Subject"]),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                            new Claim(ClaimTypes.Role, user.Role),
-                            new Claim("Id", user.Username),
-                            new Claim("Name", user.Username)
+                            new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                            new Claim(ClaimTypes.NameIdentifier, user.UserCode),
+                            new Claim(ClaimTypes.Name, user.Username),
+                            new Claim(ClaimTypes.Email, user.Email)
                         };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -70,9 +75,9 @@ namespace CMS_API.Controllers
             }
         }
 
-        private UserModel Authenticate(UserLogin userLogin)
+        private User Authenticate(UserLogin userLogin)
         {
-            var currentUser = UserConstants.Users.FirstOrDefault(o => o.Username.ToLower() == userLogin.Username.ToLower() && o.Password == userLogin.Password);
+            var currentUser = userRepository.GetUser(userLogin.Username, userLogin.Password);
 
             if (currentUser != null)
             {
