@@ -10,8 +10,9 @@ namespace CMS_API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
         [HttpGet("Admins")]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AdminsEndpoint()
         {
             var currentUser = GetCurrentUser();
@@ -41,7 +42,7 @@ namespace CMS_API.Controllers
         [HttpGet("Public")]
         public IActionResult Public()
         {
-            return Ok("Hi, You are in public property");
+            return Ok("Hi, you're on public property");
         }
 
         private UserModel GetCurrentUser()
@@ -65,3 +66,4 @@ namespace CMS_API.Controllers
         }
     }
 }
+
