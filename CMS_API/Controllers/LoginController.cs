@@ -36,6 +36,7 @@ namespace CMS_API.Controllers
             if (user != null)
             {
                 var token = Generate(user);
+               var userData= mapper.Map(userLogin, User);
                 return Ok(token);
             }
 

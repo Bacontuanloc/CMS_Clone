@@ -9,9 +9,9 @@ namespace CMS_API.Models
         {
 
 /*            CreateMap<Movie, MoviewDTO>()
-                .ForMember(second => second.GenreDescription,
+                .ForMember(second => second.Description,
                 map => map.MapFrom(
-                    first => first.Genre.Description
+                    first => first.Assignemnt.Description
                     ));*/
 
             CreateMap<UserLogin, User>();
