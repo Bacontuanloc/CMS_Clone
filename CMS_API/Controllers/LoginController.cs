@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 
 namespace CMS_API.Controllers
 {
@@ -18,10 +19,12 @@ namespace CMS_API.Controllers
     {
         private IConfiguration _config;
         private IUserRepository userRepository = new UserRepository();
-
+        private readonly IMapper mapper;
         public LoginController(IConfiguration config)
         {
             _config = config;
+            var mapconfig = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+            this.mapper = mapconfig.CreateMapper();
         }
 
         [AllowAnonymous]
