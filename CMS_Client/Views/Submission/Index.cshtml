@@ -1,34 +1,62 @@
-﻿@model CMS_Client.Entities.Assignment
+﻿@model CMS_Client.Models.SubmitData
 
 @{
     ViewBag.Title = "Submit";
+    var id = int.Parse(Context.Session.GetString("userId"));
 }
-
-<div class="row">
-
-    <div class="col-sm-12">
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Assignment List</h2>
         <div class="form-group">
 
             <div id="idUploadFile" class="alert" role="alert" style="display:none"> </div>
 
         </div>
-
-        <div class="form-group"><br />
-            <span>@Model.Title</span><br>
-            <span>@Model.Description</span><br />
+        <table class="table">
             <input type="hidden" id="assignmentid" value="@Model.AssignmentId" />
-            <input type="hidden" id="userid" value="1" />
+            <input type="hidden" id="userid" value="@id"
 
-            <input type="file" id="fileupload" /><br />
+               
 
-            <input type="button" value="upload" id="btnupload" class="btn btn-default" />
-
-        </div>
-
+            <tbody>
+                 <tr>
+                    <th>Assignment Title</th>
+                    <th>Assignment Description</th>
+                    <th>Your Submit</th>
+                    <th></th>
+                </tr>
+                    <tr>
+                        <td>@Model.Title</td>
+                        <td>@Model.Description</td>
+                    <td><input type="file" id="fileupload" /></td>
+                        <td>
+                        @if (Model.Submitted)
+                        {
+                           <p style="color:green">Submmitted</p>
+                        }
+                        <input type="button" value="upload" id="btnupload" class="btn btn-default" />
+                        </td>
+                    </tr>
+                
+            </tbody>
+        </table>
     </div>
+</body>
+</html>
 
-</div>
+
+
+
+
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
@@ -73,6 +101,9 @@
                 contentType: false,
 
                 processData: false,
+                headers: {
+                    "Authorization": "Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()" // set the Authorization header with the auth token
+                },
 
                 success: function (d) {
 

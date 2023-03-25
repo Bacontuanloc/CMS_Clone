@@ -22,6 +22,7 @@ namespace CMS_API.Controllers
         }
 
 
+
         [HttpGet("Detail/{code}")]
         public ActionResult<Assignment> GetAssignmentDetail(string code)
         {
@@ -33,5 +34,6 @@ namespace CMS_API.Controllers
             }
             return Ok(assignment);
         }
+
     }
 }
