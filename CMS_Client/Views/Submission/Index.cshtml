@@ -1,0 +1,95 @@
+﻿@model CMS_Client.Entities.Assignment
+
+@{
+    ViewBag.Title = "Submit";
+}
+
+<div class="row">
+
+    <div class="col-sm-12">
+
+        <div class="form-group">
+
+            <div id="idUploadFile" class="alert" role="alert" style="display:none"> </div>
+
+        </div>
+
+        <div class="form-group"><br />
+            <span>@Model.Title</span><br>
+            <span>@Model.Description</span><br />
+            <input type="hidden" id="assignmentid" value="@Model.AssignmentId" />
+            <input type="hidden" id="userid" value="1" />
+
+            <input type="file" id="fileupload" /><br />
+
+            <input type="button" value="upload" id="btnupload" class="btn btn-default" />
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+<script>
+
+    $(function () {
+
+        $('#btnupload').click(function () {
+
+            //debugger;
+
+            if ($('#fileupload').val() == '') {
+
+                alert('Plase select file');
+
+                return;
+
+            }
+
+            var formdata = new FormData();
+
+            var file = $('#fileupload')[0];
+            var assignmentid = $('#assignmentid').val();
+            var userid = $('#userid').val();
+
+            formdata.append('file', file.files[0]);
+            formdata.append('assignmentid', assignmentid);
+            formdata.append('userid', userid);
+            
+
+
+
+
+            $.ajax({
+
+                url: 'https://localhost:7158/api/Submission/UploadFile',
+
+                type: 'POST',
+
+                data: formdata,
+
+                contentType: false,
+
+                processData: false,
+
+                success: function (d) {
+
+                    $('#idUploadFile').addClass('alert-success').html('<strong>Success!</strong><a href="' + d + '">Open File</a>').show();
+
+                },
+
+                error: function () {
+
+                    $('#idUploadFile').addClass('alert_error').html('<strong>Failed!</strong> Error in upload');
+
+                }
+
+            })
+
+        });
+
+    });
+
+</script>

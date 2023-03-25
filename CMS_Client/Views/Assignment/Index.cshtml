@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CMS_Client.Entities.Assignment>
+
+@{
+    ViewBag.Title = "My Assignments";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">My Assignments</h1>
+
+    @if (!Model.Any())
+    {
+        <p>You have no assignments to do.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Assignment Name</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assignment in Model)
+                {
+                    <tr>
+                        <td>@assignment.Title</td>
+                        <td>@assignment.Description</td>
+                        <td>@assignment.Deadline</td>
+                        <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Index?id=@assignment.AssignmentId">Detail</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

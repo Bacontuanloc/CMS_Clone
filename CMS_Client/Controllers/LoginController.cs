@@ -58,7 +58,7 @@ namespace CMS_Client.Controllers
                     HttpContext.Session.SetString("UserCode", usercode);
                     HttpContext.Session.SetString("JWT", token.Replace('"', ' ').Trim());
                     HttpContext.Session.SetString("isLoggedIn", "true");
-                    ViewBag["Name"] = usercode;
+
                     return RedirectToAction("Index", "Home");
                 }
 
