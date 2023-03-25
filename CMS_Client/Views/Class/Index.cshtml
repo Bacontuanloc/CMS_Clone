@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var userId = int.Parse(Context.Session.GetString("userId"));
 }
 
 <!DOCTYPE html>
@@ -69,9 +70,9 @@
     <div class="container" style="margin-left:100px">
         <main role="main" class="pb-3">
             <div class="row mb-4">
-                <h2 class="col-md">Manage Products</h2>
+                <h2 class="col-md" style="font-size: xxx-large;">All Classes</h2>
                 <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
-                    <a class="btn btn-primary" href="create.html" role="button">Create New</a>
+                    <a class="btn btn-primary" asp-action="Create" role="button">Create New</a>
                 </div>
             </div>
 
@@ -82,12 +83,27 @@
                         <div class="card" aria-hidden="true">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <span class="col-6">@Html.DisplayFor(modelItem => item.ClassCode)</span>
+                                    <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.ClassCode)</span>
                                 </h5>
                                 <p class="card-text">
+                                    <span class="col-8">Teacher: @userId</span>
+                                </p>
+                                <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
                                     <span class="col-8">@Html.DisplayFor(modelItem => item.Description)</span>
                                 </p>
-                                <a href="#" tabindex="-1" class="btn btn-primary col-6">Enroll</a>
+                                @if (userId == 1)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.ClassId" style="width: 184px;" class="btn btn-primary col mb-6">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.ClassId" style="width: 184px;" class="btn btn-primary col mb-6">Delete</a>
+                                }
+                                else if (userId == 2)
+                                {
+                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Detail</a>
+                                }
+                                else
+                                {
+                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Enroll</a>
+                                }
                             </div>
                         </div>
                     </div>

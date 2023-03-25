@@ -1,0 +1,94 @@
+﻿@model CMS_Client.Entities.Class
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #140b5c;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+            .sidenav a {
+                padding: 6px 6px 6px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+            }
+
+                .sidenav a:hover {
+                    color: #f1f1f1;
+                }
+
+        .main {
+            margin-left: 200px; /* Same as the width of the sidenav */
+        }
+
+        @@media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidenav">
+        <a href="Home/Index">Home</a>
+        <a asp-action="Index">Class</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+    <div class="container" style="margin-left:100px">
+        <form method="post">
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="ClassId" id="exampleFormControlInput1" value="@Model.ClassId">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Class code</label>
+                <input type="text" class="form-control" name="ClassCode" id="exampleInputEmail1" placeholder="Enter class code" value="@Model.ClassCode" style="margin-top:5px">
+            </div>
+            <div class="form-group" style="margin-top:20px">
+                <label for="exampleInputPassword1">Description</label>
+                <textarea class="form-control" name="Description" id="exampleInputPassword1" placeholder="Description" style="margin-top:5px">@Model.Description</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/lib/jquery/jquery.min.js"></script>
+    <script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/site.js"></script>
+    <script src="assets/js/index.js"></script>
+
+</body>
+
+</html>

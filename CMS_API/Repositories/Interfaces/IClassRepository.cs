@@ -10,5 +10,7 @@ namespace CMS_API.Repositories.Interfaces
         void SaveClass(Class c);
         void UpdateClass(Class c);
         void DeleteClass(Class c);
+        List<Class> FindClassByStudentId(int id);
+        List<Class> FindClassByTeacherId(int id);
     }
 }
