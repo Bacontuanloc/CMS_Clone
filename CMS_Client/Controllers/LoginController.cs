@@ -26,10 +26,8 @@ namespace CMS_Client.Controllers
         public IActionResult Login()
         {
             String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
-            ViewBag["Name"] = (String)HttpContext.Session.GetString("UserCode");
             if (isLoggedIn != null && isLoggedIn.Equals("true"))
             {
-                ViewBag["Name"]= HttpContext.Session.GetString("UserCode");
                 return RedirectToAction("Index", "Home");
             }
             return View();
