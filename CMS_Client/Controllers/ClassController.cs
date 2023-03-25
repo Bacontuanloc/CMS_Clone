@@ -28,77 +28,45 @@ namespace CMS_Client.Controllers
                 PropertyNameCaseInsensitive = true,
             };
             List<Class> listClasses = JsonSerializer.Deserialize<List<Class>>(strData, options);
+
+            var userId = int.Parse(HttpContext.Session.GetString("userId"));
+            ViewBag.userId = userId;
+
             return View(listClasses);
         }
 
-        //public async Task<IActionResult> Details(int id)
-        //{
-        //    ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
-        //    HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
-        //    string strData = await response.Content.ReadAsStringAsync();
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
 
-        //    var options = new JsonSerializerOptions
-        //    {
-        //        PropertyNameCaseInsensitive = true
-        //    };
-        //    Class c = JsonSerializer.Deserialize<Class>(strData, options);
-        //    return View(c);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Class cl)
+        {
+            cl.ClassId = 0;
+            var payload = JsonSerializer.Serialize(cl);
 
-        //public async Task<IActionResult> Create()
-        //{
-        //    //CategoryApiUrl = $"http://localhost:5099/api/Category";
-        //    //HttpResponseMessage response = await client.GetAsync(CategoryApiUrl);
-        //    //string strData = await response.Content.ReadAsStringAsync();
+            HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
 
-        //    //var options = new JsonSerializerOptions
-        //    //{
-        //    //    PropertyNameCaseInsensitive = true
-        //    //};
-        //    //List<Category> category = JsonSerializer.Deserialize<List<Category>>(strData, options);
-        //    return View();
-        //}
+            HttpResponseMessage response = await client.PostAsync(ClassApiUrl, c);
+            string strData = await response.Content.ReadAsStringAsync();
+            return RedirectToAction("Index", "Class");
+        }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(Class cl)
-        //{
-        //    cl.ClassId = 0;
-        //    var payload = JsonSerializer.Serialize(cl);
+        public async Task<ActionResult> Edit(int id)
+        {
+            ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
+            HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
+            string strData = await response.Content.ReadAsStringAsync();
 
-        //    HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        //    HttpResponseMessage response = await client.PostAsync(ClassApiUrl, c);
-        //    string strData = await response.Content.ReadAsStringAsync();
-
-
-        //    //CategoryApiUrl = $"http://localhost:5099/api/Category";
-        //    //HttpResponseMessage responseCate = await client.GetAsync(CategoryApiUrl);
-        //    //string strDataCate = await responseCate.Content.ReadAsStringAsync();
-
-        //    //var options = new JsonSerializerOptions
-        //    //{
-        //    //    PropertyNameCaseInsensitive = true
-        //    //};
-        //    //List<Category> category = JsonSerializer.Deserialize<List<Category>>(strDataCate, options);
-
-        //    //return View(category);
-        //    return RedirectToAction("Index", "Class");
-        //}
-
-        //public async Task<ActionResult> EditAsync(int id)
-        //{
-        //    ClassApiUrl = $"http://localhost:5099/api/Product/{id}";
-        //    HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
-        //    string strData = await response.Content.ReadAsStringAsync();
-
-        //    var options = new JsonSerializerOptions
-        //    {
-        //        PropertyNameCaseInsensitive = true
-        //    };
-        //    Class c = JsonSerializer.Deserialize<Class>(strData, options);
-        //    return View(c);
-        //}
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            Class c = JsonSerializer.Deserialize<Class>(strData, options);
+            return View(c);
+        }
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]
@@ -128,6 +96,20 @@ namespace CMS_Client.Controllers
         //    };
         //    Product product = JsonSerializer.Deserialize<Product>(strData, options);
         //    return View(product);
+        //}
+
+        //public async Task<IActionResult> Details(int id)
+        //{
+        //    ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
+        //    HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
+        //    string strData = await response.Content.ReadAsStringAsync();
+
+        //    var options = new JsonSerializerOptions
+        //    {
+        //        PropertyNameCaseInsensitive = true
+        //    };
+        //    Class c = JsonSerializer.Deserialize<Class>(strData, options);
+        //    return View(c);
         //}
 
         //[HttpGet]

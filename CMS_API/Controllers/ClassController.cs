@@ -18,11 +18,29 @@ namespace CMS_API.Controllers
             return Ok(repository.GetClasses());
         }
 
-        [HttpGet("{code}")]
-        public ActionResult<IEnumerable<Class>> FindClassByClassCode(string code)
+        [HttpGet("{id}")]
+        public ActionResult<Class> FindClassById(int id)
         {
-            return Ok(repository.FindClassByClassCode(code));
+            return Ok(repository.FindClassById(id));
         }
+
+        //[HttpGet("{code}")]
+        //public ActionResult<IEnumerable<Class>> FindClassByClassCode(string code)
+        //{
+        //    return Ok(repository.FindClassByClassCode(code));
+        //}
+
+        //[HttpGet("{studentId}")]
+        //public ActionResult<IEnumerable<Class>> FindClassByStudentId(int studentId)
+        //{
+        //    return Ok(repository.FindClassByStudentId(studentId));
+        //}
+
+        //[HttpGet("{teacherId}")]
+        //public ActionResult<IEnumerable<Class>> FindClassByTeacherId(int teacherId)
+        //{
+        //    return Ok(repository.FindClassByStudentId(teacherId));
+        //}
 
         [HttpPost]
         public IActionResult SaveClass(Class c)
