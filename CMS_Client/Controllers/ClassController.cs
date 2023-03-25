@@ -68,35 +68,34 @@ namespace CMS_Client.Controllers
             return View(c);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(IFormCollection collection)
-        //{
-        //    Class c = new Class();
-        //    c.ClassId = Int32.Parse(collection["ClassId"]);
-        //    c.ClassCode = collection["ClassCode"];
-        //    c.Description = collection["Description"];
-        //    p.UnitsInStock = Int32.Parse(collection["UnitsInStock"]);
-        //    p.UnitPrice = Decimal.Parse(collection["UnitPrice"]);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(IFormCollection collection)
+        {
+            Class cl = new Class();
+            cl.ClassId = Int32.Parse(collection["ClassId"]);
+            cl.ClassCode = collection["ClassCode"];
+            cl.Description = collection["Description"];
 
-        //    var payload = JsonSerializer.Serialize(p);
+            var payload = JsonSerializer.Serialize(cl);
 
-        //    HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
+            HttpContent c = new StringContent(payload, Encoding.UTF8, "application/json");
 
-        //    HttpResponseMessage response = await client.PutAsync(ClassApiUrl, c);
-        //    string strData = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await client.PutAsync(ClassApiUrl, c);
+            string strData = await response.Content.ReadAsStringAsync();
 
-        //    ClassApiUrl = $"http://localhost:5099/api/Product/{p.ProductId}";
-        //    response = await client.GetAsync(ClassApiUrl);
-        //    strData = await response.Content.ReadAsStringAsync();
+            ClassApiUrl = $"https://localhost:7158/api/Class/{cl.ClassId}";
+            response = await client.GetAsync(ClassApiUrl);
+            strData = await response.Content.ReadAsStringAsync();
 
-        //    var options = new JsonSerializerOptions
-        //    {
-        //        PropertyNameCaseInsensitive = true
-        //    };
-        //    Product product = JsonSerializer.Deserialize<Product>(strData, options);
-        //    return View(product);
-        //}
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            Class cla = JsonSerializer.Deserialize<Class>(strData, options);
+            //return View(cla);
+            return RedirectToAction("Index", "Class");
+        }
 
         //public async Task<IActionResult> Details(int id)
         //{
@@ -112,14 +111,14 @@ namespace CMS_Client.Controllers
         //    return View(c);
         //}
 
-        //[HttpGet]
-        //public async Task<IActionResult> DeleteAsync(int id)
-        //{
-        //    ClassApiUrl = $"http://localhost:5099/api/Product/{id}";
-        //    HttpResponseMessage response = await client.DeleteAsync(ClassApiUrl);
-        //    string strData = await response.Content.ReadAsStringAsync();
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
+            HttpResponseMessage response = await client.DeleteAsync(ClassApiUrl);
+            string strData = await response.Content.ReadAsStringAsync();
 
-        //    return RedirectToAction("Index", "Product");
-        //}
+            return RedirectToAction("Index", "Class");
+        }
     }
 }

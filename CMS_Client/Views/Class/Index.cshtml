@@ -70,7 +70,7 @@
     <div class="container" style="margin-left:100px">
         <main role="main" class="pb-3">
             <div class="row mb-4">
-                <h2 class="col-md">Manage Products</h2>
+                <h2 class="col-md" style="font-size: xxx-large;">All Classes</h2>
                 <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
                     <a class="btn btn-primary" asp-action="Create" role="button">Create New</a>
                 </div>
@@ -83,18 +83,18 @@
                         <div class="card" aria-hidden="true">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <span class="col-6">@Html.DisplayFor(modelItem => item.ClassCode)</span>
+                                    <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.ClassCode)</span>
                                 </h5>
-                                <p class="card-text">
-                                    <span class="col-8">@Html.DisplayFor(modelItem => item.Description)</span>
-                                </p>
                                 <p class="card-text">
                                     <span class="col-8">Teacher: @userId</span>
                                 </p>
+                                <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
+                                    <span class="col-8">@Html.DisplayFor(modelItem => item.Description)</span>
+                                </p>
                                 @if (userId == 1)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ClassId" class="btn btn-primary col mb-6">Edit</a>
-                                    <a href="#" class="btn btn-primary col mb-6">Delete</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ClassId" style="width: 184px;" class="btn btn-primary col mb-6">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.ClassId" style="width: 184px;" class="btn btn-primary col mb-6">Delete</a>
                                 }
                                 else if (userId == 2)
                                 {

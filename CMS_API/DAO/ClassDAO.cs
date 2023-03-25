@@ -125,7 +125,7 @@ namespace CMS_API.DAO
             {
                 using (var context = new CMS_CloneContext())
                 {
-                    var c1 = context.Classes.SingleOrDefault(c => c.ClassId == c.ClassId);
+                    var c1 = context.Classes.Where(cl => cl.ClassId == c.ClassId).FirstOrDefault();
                     context.Classes.Remove(c1);
                     context.SaveChanges();
                 }

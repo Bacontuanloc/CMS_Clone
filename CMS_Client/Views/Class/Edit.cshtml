@@ -68,6 +68,9 @@
     </div>
     <div class="container" style="margin-left:100px">
         <form method="post">
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="ClassId" id="exampleFormControlInput1" value="@Model.ClassId">
+            </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Class code</label>
                 <input type="text" class="form-control" name="ClassCode" id="exampleInputEmail1" placeholder="Enter class code" value="@Model.ClassCode" style="margin-top:5px">
