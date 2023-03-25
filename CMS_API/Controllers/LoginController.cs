@@ -57,7 +57,8 @@ namespace CMS_API.Controllers
                             new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                             new Claim(ClaimTypes.NameIdentifier, user.UserCode),
                             new Claim(ClaimTypes.Name, user.Username),
-                            new Claim(ClaimTypes.Email, user.Email)
+                            new Claim(ClaimTypes.Email, user.Email),
+                            new Claim(ClaimTypes.UserData, user.UserId.ToString()),
                         };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

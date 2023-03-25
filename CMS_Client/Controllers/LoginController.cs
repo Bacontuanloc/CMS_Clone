@@ -52,13 +52,13 @@ namespace CMS_Client.Controllers
                     var jwtSecurityToken = handler.ReadJwtToken(token.Replace('"', ' ').Trim());
                     var role = jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
                     var usercode = jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-
+                    var userId = jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
                     // Store data in session
                     HttpContext.Session.SetString("Role", role.ToString());
                     HttpContext.Session.SetString("UserCode", usercode);
                     HttpContext.Session.SetString("JWT", token.Replace('"', ' ').Trim());
                     HttpContext.Session.SetString("isLoggedIn", "true");
-
+                    HttpContext.Session.SetString("userId", userId);
                     return RedirectToAction("Index", "Home");
                 }
 

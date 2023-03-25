@@ -57,13 +57,27 @@ namespace CMS_API.DAO
         public static List<Class> FindClassByStudentId(int id)
         {
             var listClasses = new List<Class>();
-            var listUserClasses = new List<int>();
             try
             {
                 using (var context = new CMS_CloneContext())
                 {
-                    listUserClasses = context.UserClasses.Include(uc => uc.User).ThenInclude(u => u.Role).Where(u => u.UserId == id && u.User.Role.RoleName.Equals("Student")).Select(u => u.ClassId).ToList();
-                    listClasses = (List<Class>)context.Classes.Include(c => listUserClasses.Contains(c.ClassId));
+                    listClasses = context.UserClasses.Include(uc => uc.User).ThenInclude(u => u.Role).Include(uc => uc.Class).Where(uc => uc.UserId == id && uc.User.Role.RoleName.Equals("Student")).Select(uc => uc.Class).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return listClasses;
+        }
+        public static List<Class> FindClassByTeacherId(int id)
+        {
+            var listClasses = new List<Class>();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    listClasses = context.UserClasses.Include(uc => uc.User).ThenInclude(u => u.Role).Include(uc => uc.Class).Where(uc => uc.UserId == id && uc.User.Role.RoleName.Equals("Teacher")).Select(uc => uc.Class).ToList();
                 }
             }
             catch (Exception e)
@@ -111,7 +125,7 @@ namespace CMS_API.DAO
             {
                 using (var context = new CMS_CloneContext())
                 {
-                    var c1 = context.Classes.SingleOrDefault(c => c.ClassId == c.ClassId);
+                    var c1 = context.Classes.Where(cl => cl.ClassId == c.ClassId).FirstOrDefault();
                     context.Classes.Remove(c1);
                     context.SaveChanges();
                 }

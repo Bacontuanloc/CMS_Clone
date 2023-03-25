@@ -15,6 +15,10 @@ namespace CMS_API.Repositories
 
         public Class FindClassById(int id) => ClassDAO.FindClassById(id);
 
+        public List<Class> FindClassByStudentId(int id) => ClassDAO.FindClassByStudentId(id);
+
+        public List<Class> FindClassByTeacherId(int id) => ClassDAO.FindClassByTeacherId(id);
+
         public List<Class> GetClasses() => ClassDAO.GetClasses();
 
         public void SaveClass(Class c)
