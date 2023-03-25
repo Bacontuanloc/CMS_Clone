@@ -1,0 +1,14 @@
+﻿using CMS_API.Entities;
+
+namespace CMS_API.Repositories.Interfaces
+{
+    public interface IClassRepository
+    {
+        List<Class> GetClasses();
+        List<Class> FindClassByClassCode(string code);
+        Class FindClassById(int id);
+        void SaveClass(Class c);
+        void UpdateClass(Class c);
+        void DeleteClass(Class c);
+    }
+}
