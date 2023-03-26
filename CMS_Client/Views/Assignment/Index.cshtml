@@ -42,7 +42,7 @@
         </div>
     </div>
 
-      @if (roleid == 2)
+    @if (roleid == 2)
     {
         <a href="../Create?id=@ViewData["classID"]">
             <Button class="btn btn-primary download-file">Create</Button>
@@ -52,7 +52,7 @@
     {
         <p>You have no assignments to do.</p>
     }
-   
+
     else
     {
         <table class="table table-striped">
@@ -61,7 +61,12 @@
                     <th>Assignment Name</th>
                     <th>Description</th>
                     <th>Due Date</th>
-                    <th>Detail</th>
+                    @if (roleid <= 2){
+                        <th>Grade</th>
+                    }else{
+                        <th>Detail</th>
+                    }
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,13 +78,14 @@
                         <td>@assignment.Deadline</td>
                         @if (roleid <= 2)
                         {
-                           <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Teacher?id=@assignment.AssignmentId">Grade</a></td>
+                            <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Teacher?id=@assignment.AssignmentId">Grade</a></td>
+                            <td> <a tabindex="-2" class="btn btn-primary col-6" asp-controller="Assignment" asp-action="Edit" asp-route-classId="@ViewData["classID"]" asp-route-assignmentId="@assignment.AssignmentId">Edit</a></td>
                         }
                         else
                         {
                             <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Index?id=@assignment.AssignmentId">Detail</a></td>
                         }
-                        
+
                     </tr>
                 }
             </tbody>

@@ -41,6 +41,21 @@ namespace CMS_Client.Controllers
 
         }
 
+        [HttpGet()]
+        public async Task<ActionResult> Edit(int classId, int assignmentId)
+        {
+            apiurl = $"https://localhost:7158/api/Assignment/classId/{classId}/assignmentId/{assignmentId}";
+            HttpResponseMessage response = await client.GetAsync(apiurl);
+            string strData = await response.Content.ReadAsStringAsync();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            ViewData["classID"] = classId;
+            Assignment assignment = JsonSerializer.Deserialize<Assignment>(strData, options);
+            return View(assignment);
+        }
 
         [HttpGet()]
         public async Task<IActionResult> Create(int id)
