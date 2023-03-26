@@ -1,6 +1,9 @@
-﻿using CMS_Client.Entities;
+﻿using CMS_API.DAO;
+using CMS_Client.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace CMS_Client.Controllers
@@ -40,6 +43,21 @@ namespace CMS_Client.Controllers
         public async Task<IActionResult> Create(int id)
         {
             return View(id);
+        }
+        [HttpGet()]
+        public async Task<ActionResult> Edit(int classId, int assignmentId)
+        {
+            apiurl = $"https://localhost:7158/api/Assignment/classId/{classId}/assignmentId/{assignmentId}";
+            HttpResponseMessage response = await client.GetAsync(apiurl);
+            string strData = await response.Content.ReadAsStringAsync();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            ViewData["classID"] = classId;
+            Assignment assignment = JsonSerializer.Deserialize<Assignment>(strData, options);
+            return View(assignment);
         }
     }
 }

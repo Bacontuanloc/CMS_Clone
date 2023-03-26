@@ -1,0 +1,199 @@
+﻿@model CMS_Client.Entities.Assignment
+
+@{
+    ViewData["Title"] = "Home Page";
+    var role = int.Parse(Context.Session.GetString("Role"));
+    var userId = int.Parse(Context.Session.GetString("userId"));
+    var selectedDateTime = Model.Deadline?.ToString("yyyy-MM-ddTHH:mm:ss");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidenav a:hover {
+                    color: #f1f1f1;
+                }
+
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+            margin-left: 150px;
+        }
+
+        @@media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a asp-action="Index">Home</a>
+        @if (role != 1)
+        {
+            <a asp-controller="Class" asp-action="Index" asp-route-id="@userId">My Class</a>
+        }
+        @if (role == 1)
+        {
+            <a href="#">User Management</a>
+        }
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+    <div class="container" id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+        <form method="post">
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="ClassId" id="ClassId" value="@ViewData["classID"]">
+            </div>
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="AssignmentId" id="AssignmentId" value="@Model.AssignmentId">
+            </div>
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="UserId" id="UserId" value="@userId">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Title</label>
+                <input type="text" class="form-control" name="AssignmentTitle" id="AssignmentTitle" placeholder="Enter class code" value="@Model.Title" style="margin-top:5px;width: 50%;">
+            </div>
+            <div class="form-group" style="margin-top:20px">
+                <label for="exampleInputPassword1">Description</label>
+                <textarea class="form-control" name="Description" id="Description" placeholder="Description" style="margin-top:5px;width: 50%;">@Model.Description</textarea>
+            </div>
+            <div class="form-group">
+                <label for="assignment-deadline">Deadline</label>
+                <input type="datetime-local" class="form-control" name="Deadline" id="Deadline" value="@selectedDateTime" style="margin-top:5px;width: 50%;" required>
+                <div class="invalid-feedback">
+                    Please provide an assignment deadline.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px" id="submit-assignment-btn">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/lib/jquery/jquery.min.js"></script>
+    <script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/site.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "150px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#submit-assignment-btn').click(function (e) {
+                e.preventDefault();
+
+                var formData = {
+                    assignmentId: $('#AssignmentId').val(),
+                    classId: $('#ClassId').val(),
+                    ownerId: $('#UserId').val(),
+                    title: $('#AssignmentTitle').val(),
+                    description: $('#Description').val(),
+                    deadline: $('#Deadline').val()
+                };
+
+                $.ajax({
+                    type: "PUT",
+                    url: "https://localhost:7158/api/Assignment/",
+                    headers: {
+                        "Authorization": "Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()"
+                    },
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function () {
+                        Swal.fire({
+                            title: 'Assignment submitted successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/Assignment/Index/?id=@ViewData["classID"]';
+                            }
+                        });
+                    },
+                    error: function () {
+                        console.log(formData);
+                        Swal.fire({
+                            title: 'Error submitting assignment!',
+                            text: 'An error occurred while submitting the assignment. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+        <script>
+    // Disable form validation on button clicks
+        $('button[type="submit"]').click(function () {
+            $('.needs-validation').removeClass('was-validated');
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
