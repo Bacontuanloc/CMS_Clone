@@ -70,7 +70,7 @@
     <div class="container" style="margin-left:100px">
         <main role="main" class="pb-3">
             <div class="row mb-4">
-                <h2 class="col-md" style="font-size: xxx-large;">All Classes</h2>
+                <h2 class="col-md" >All Classes</h2>
                 <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
                     <a class="btn btn-primary" asp-action="Create" role="button">Create New</a>
                 </div>
@@ -98,7 +98,7 @@
                                 }
                                 else if (userId == 2)
                                 {
-                                    <a href="" tabindex="-1" class="btn btn-primary col-6">Detail</a>
+                                    <a href="../Assignment/Index/?id=@Html.DisplayFor(modelItem => item.ClassId)" tabindex="-1" class="btn btn-primary col-6">Detail</a>
                                 }
                                 else
                                 {

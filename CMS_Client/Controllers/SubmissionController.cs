@@ -32,6 +32,13 @@ namespace CMS_Client.Controllers
             };
             Assignment assignment  = JsonSerializer.Deserialize<Assignment>(strData, options);
 
+            var x = int.Parse(HttpContext.Session.GetString("userId"));
+
+            HttpResponseMessage response1 = await client.GetAsync(apiurl + "Submission/GetAssignmentSubmited/?id=" + id+ "&userid="+x);
+            string strData1 = await response1.Content.ReadAsStringAsync();
+
+            Submission submission = JsonSerializer.Deserialize<Submission>(strData1, options);
+
             SubmitData submitData = new SubmitData
             {
                 AssignmentId = assignment.AssignmentId,
@@ -39,6 +46,9 @@ namespace CMS_Client.Controllers
                 Title = assignment.Title,
                 Submitted = true
             }; 
+            if(submission== null) {
+                submitData.Submitted= false;
+            }
 
             return View(submitData);
 

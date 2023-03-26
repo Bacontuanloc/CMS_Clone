@@ -11,10 +11,10 @@ namespace CMS_API.Controllers
     public class SubmissionController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<List<Submission>> GetAssignmentSubmited(int id)
+        public ActionResult<Submission> GetAssignmentSubmited(int id,int userid)
         {
             CMS_CloneContext context = new CMS_CloneContext();
-            return Ok(context.Submissions.Where(c => c.AssignmentId == id).ToList());
+            return Ok(context.Submissions.Where(c => c.AssignmentId == id&&c.OwnerId==userid).FirstOrDefault());
         }
         [HttpPost]
         [Authorize]
