@@ -21,7 +21,6 @@ namespace CMS_API.Controllers
             return Ok(context.Submissions.Where(c => c.AssignmentId == id&&c.OwnerId==userid).FirstOrDefault());
         }
         [HttpPost]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFile(IFormFile file,[FromForm] int assignmentid,[FromForm] int userid)
@@ -124,7 +123,7 @@ namespace CMS_API.Controllers
         }
 
         [HttpPost("{submissionid}")]
-
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Grade(int submissionid, int grade, string feedback)
         {
             using (var context = new CMS_CloneContext())

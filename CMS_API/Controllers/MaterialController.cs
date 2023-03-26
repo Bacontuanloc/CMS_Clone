@@ -25,7 +25,7 @@ namespace CMS_API.Controllers
 
 
         [HttpPost]
-        
+        [Authorize(Roles = "2")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] int classid, [FromForm] string title)

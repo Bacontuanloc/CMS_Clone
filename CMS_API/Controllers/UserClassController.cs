@@ -35,6 +35,7 @@ namespace CMS_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "1")]
         public IActionResult SaveUserClass(UserClassModel c)
         {
             repository.SaveUserClass(c);
@@ -42,6 +43,7 @@ namespace CMS_API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "1")]
         public IActionResult UpdateUserClass(UserClassModel c)
         {
             var cTmp = repository.FindUserClassById(c.Id);
@@ -52,6 +54,7 @@ namespace CMS_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "1")]
         public IActionResult DeleteUserClass(int id)
         {
             var d = repository.FindUserClassById(id);

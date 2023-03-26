@@ -73,6 +73,7 @@ namespace CMS_API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "2")]
         public IActionResult UpdateAssignment(AssignmentDTO c)
         {
             Assignment a = new Assignment();
