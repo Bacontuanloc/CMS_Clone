@@ -1,43 +1,76 @@
-﻿
+﻿@model IEnumerable<CMS_Client.Entities.Submission>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Submissions List</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h2>Submissions List</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>User Code</th>
-                    <th>User Name</th>
-                    <th>Assignment</th>
-                    <th>File</th>
-                    <th>Grade</th>
-                    <th>FeedBack</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var submission in Model)
-                {
+@{
+    ViewBag.Title = "Student Submissions";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Student Submissions</h2>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>@submission.UserCode</td>
-                        <td>@submission.UserName</td>
-                        <td>@submission.Assignment</td>
-                        <td>
-                            <a href="@submission.FileUrl">Download File</a>
-                        </td>
-                        <td>@submission.Grade</td>
-                        <td>@submission.FeedBack</td>
+                        <th>Student Name</th>                      
+                        <th>Submission Date</th>
+                        <th>Grade</th>
+                        <th>Feedback</th>
+                        <th>Submission File</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var submission in Model)
+                    {
+                        <tr>
+                            <td>@submission.OwnerId</td>
+                            <td>@submission.SubmissionTime</td>
+                            <td>
+                                <input type="number" value=" @submission.Grade" min="0" max="10">
+                               </td>
+                            <td><td>
+                                <input type="text" value=" @submission.Feedback" >
+                               </td></td>
+                            <td>
+                                <button class="btn btn-primary download-file" data-filename="@submission.FilePath">Download</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.download-file').click(function () {
+            var filename = $(this).data('filename');
+            var url = 'https://localhost:7158/api/Submission/DownloadFile/?filename=' + filename;
+            var token = 'Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()'; // Replace with your access token function
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', token); // Set the authorization header
+                },
+                xhrFields: {
+                    responseType: 'blob' // Set the response type to blob to handle binary data
+                },
+                success: function (data) {
+                    var url = window.URL.createObjectURL(data);
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+</script>

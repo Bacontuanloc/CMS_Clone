@@ -17,20 +17,26 @@ namespace CMS_Client.Controllers
             client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             client.DefaultRequestHeaders.Accept.Add(contentType);
-            apiurl = configuration.GetValue<string>("Url") + "api/Assignment";
+            apiurl = configuration.GetValue<string>("Url") + "api";
 
         }
         [HttpGet()]
         public async Task<IActionResult> Index(int id)
         {
-            HttpResponseMessage response = await client.GetAsync(apiurl+"/"+id);
+            HttpResponseMessage response = await client.GetAsync(apiurl+ "/Assignment/" + id);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             };
             List<Assignment> listAss = JsonSerializer.Deserialize<List<Assignment>>(strData, options);
+
+            HttpResponseMessage response2 = await client.GetAsync(apiurl + "/Material/GetMaterials?classid=" + id);
+            string strData2 = await response2.Content.ReadAsStringAsync();
+
+            List<Material> materials = JsonSerializer.Deserialize<List<Material>>(strData2, options);
             ViewData["classID"] = id;
+            ViewBag.material = materials;
             return View(listAss);
 
         }
@@ -38,6 +44,11 @@ namespace CMS_Client.Controllers
 
         [HttpGet()]
         public async Task<IActionResult> Create(int id)
+        {
+            return View(id);
+        }
+        [HttpGet()]
+        public async Task<IActionResult> CreateMaterial(int id)
         {
             return View(id);
         }

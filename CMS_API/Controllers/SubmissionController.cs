@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Reflection.Emit;
+using System.IO;
+using System.Drawing;
 
 namespace CMS_API.Controllers
 {
@@ -33,30 +36,53 @@ namespace CMS_API.Controllers
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 CMS_CloneContext context= new CMS_CloneContext();
+                Submission submissionsubmited= context.Submissions.Where(sub=>sub.OwnerId == userid).Where(x=>x.AssignmentId==assignmentid).FirstOrDefault();
+               
                 var user= context.Users.FirstOrDefault(x => x.UserId==userid);
                 var date = DateTime.Now;
                 filename = user.UserCode+"_"+ date.Ticks.ToString() + extension;
 
 
-                var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files\\"+assignmentid);
+                var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files\\Assignment"+assignmentid);
 
                 if (!Directory.Exists(filepath))
                 {
                     Directory.CreateDirectory(filepath);
                 }
-
-                var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files\\" + assignmentid, filename);
+                
+                if (submissionsubmited != null)
+                {
+                    var path = Path.Combine(submissionsubmited.FilePath);
+                    FileInfo file1 = new FileInfo(path);
+                    if (file1.Exists)//check file exsit or not  
+                    {
+                        file1.Delete();
+                    }
+                }
+                var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files\\Assignment" + assignmentid, filename);
                 using (var stream = new FileStream(exactpath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
+                    
                 }
-                Submission submission= new Submission();
-                submission.AssignmentId= assignmentid;
-                submission.OwnerId= userid;
-                submission.SubmissionTime = date;
-                submission.FilePath=exactpath;
-                context.Submissions.Add(submission);
-                context.SaveChanges();
+                if(submissionsubmited != null)
+                {
+                    submissionsubmited.SubmissionTime = date;
+                    submissionsubmited.FilePath = exactpath;
+                    context.Submissions.Update(submissionsubmited);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    Submission submission = new Submission();
+                    submission.AssignmentId = assignmentid;
+                    submission.OwnerId = userid;
+                    submission.SubmissionTime = date;
+                    submission.FilePath = exactpath;
+                    context.Submissions.Add(submission);
+                    context.SaveChanges();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -68,9 +94,9 @@ namespace CMS_API.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> DownloadFile(string filename, int assignmentid, int userid)
+        public async Task<IActionResult> DownloadFile(string filename)
         {
-            var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);
+            var filepath = Path.Combine(filename);
 
             var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(filepath, out var contenttype))
@@ -80,6 +106,20 @@ namespace CMS_API.Controllers
 
             var bytes = await System.IO.File.ReadAllBytesAsync(filepath);
             return File(bytes, contenttype, Path.GetFileName(filepath));
+        }
+
+
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetSubmission(int assignmentid)
+        {
+            List<Submission> submissions = new List<Submission>();
+            using (var context = new CMS_CloneContext())
+            {
+                submissions = context.Submissions.Where(c => c.AssignmentId == assignmentid).ToList();
+            }
+            return Ok(submissions);
         }
 
     }

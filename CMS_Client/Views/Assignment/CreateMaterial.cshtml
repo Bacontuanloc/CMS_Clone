@@ -1,4 +1,4 @@
-﻿@model CMS_Client.Models.SubmitData
+﻿
 
 @{
     ViewBag.Title = "Submit";
@@ -21,31 +21,24 @@
 
         </div>
         <table class="table">
-            <input type="hidden" id="assignmentid" value="@Model.AssignmentId" />
-            <input type="hidden" id="userid" value="@id"
+            <input type="hidden" id="classid" value="@Model" />
 
-               
+
 
             <tbody>
-                 <tr>
+                <tr>
                     <th>Assignment Title</th>
-                    <th>Assignment Description</th>
                     <th>Your Submit</th>
                     <th></th>
                 </tr>
-                    <tr>
-                        <td>@Model.Title</td>
-                        <td>@Model.Description</td>
+                <tr>
+                    <td><input type="text" id="title" /></td>
                     <td><input type="file" id="fileupload" /></td>
-                        <td>
-                        @if (Model.Submitted)
-                        {
-                           <p style="color:green">Submmitted</p>
-                        }
+                    <td>
                         <input type="button" value="upload" id="btnupload" />
-                        </td>
-                    </tr>
-                
+                    </td>
+                </tr>
+
             </tbody>
         </table>
     </div>
@@ -79,20 +72,20 @@
             var formdata = new FormData();
 
             var file = $('#fileupload')[0];
-            var assignmentid = $('#assignmentid').val();
-            var userid = $('#userid').val();
+            var classid = $('#classid').val();
+            var title = $('#title').val();
 
             formdata.append('file', file.files[0]);
-            formdata.append('assignmentid', assignmentid);
-            formdata.append('userid', userid);
-            
+            formdata.append('classid', classid);
+            formdata.append('title', title);
+
 
 
 
 
             $.ajax({
 
-                url: 'https://localhost:7158/api/Submission/UploadFile',
+                url: 'https://localhost:7158/api/Material/UploadFile',
 
                 type: 'POST',
 

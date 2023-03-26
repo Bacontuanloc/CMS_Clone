@@ -10,11 +10,44 @@
 
     @if (roleid == 2)
     {
-        <a href="../Create?id=@ViewData["classID"]">
-            <input type="button" value="Create" />
+        <a href="../CreateMaterial?id=@ViewData["classID"]">
+            <Button class="btn btn-primary download-file">Add Material</Button>
         </a>
     }
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Materials</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Material Name</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var material in ViewBag.material)
+                        {
+                            <tr>
+                                <td>@material.Title</td>
+                                <td>
+                                    <button class="btn btn-primary download-file" data-filename="@material.FilePath">Download</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+      @if (roleid == 2)
+    {
+        <a href="../Create?id=@ViewData["classID"]">
+            <Button class="btn btn-primary download-file">Create</Button>
+        </a>
+    }
     @if (!Model.Any())
     {
         <p>You have no assignments to do.</p>
@@ -38,10 +71,52 @@
                         <td>@assignment.Title</td>
                         <td>@assignment.Description</td>
                         <td>@assignment.Deadline</td>
-                        <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Index?id=@assignment.AssignmentId">Detail</a></td>
+                        @if (roleid <= 2)
+                        {
+                           <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Teacher?id=@assignment.AssignmentId">Grade</a></td>
+                        }
+                        else
+                        {
+                            <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Index?id=@assignment.AssignmentId">Detail</a></td>
+                        }
+                        
                     </tr>
                 }
             </tbody>
         </table>
     }
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.download-file').click(function () {
+            var filename = $(this).data('filename');
+            var url = 'https://localhost:7158/api/Submission/DownloadFile/?filename=' + filename;
+            var token = 'Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()'; // Replace with your access token function
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', token); // Set the authorization header
+                },
+                xhrFields: {
+                    responseType: 'blob' // Set the response type to blob to handle binary data
+                },
+                success: function (data) {
+                    var url = window.URL.createObjectURL(data);
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+</script>

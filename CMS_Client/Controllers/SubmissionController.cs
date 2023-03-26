@@ -37,8 +37,7 @@ namespace CMS_Client.Controllers
             HttpResponseMessage response1 = await client.GetAsync(apiurl + "Submission/GetAssignmentSubmited/?id=" + id+ "&userid="+x);
             string strData1 = await response1.Content.ReadAsStringAsync();
 
-            Submission submission = JsonSerializer.Deserialize<Submission>(strData1, options);
-
+            
             SubmitData submitData = new SubmitData
             {
                 AssignmentId = assignment.AssignmentId,
@@ -46,8 +45,13 @@ namespace CMS_Client.Controllers
                 Title = assignment.Title,
                 Submitted = true
             }; 
-            if(submission== null) {
+            if(strData1 == null) {
                 submitData.Submitted= false;
+            }
+            else
+            {
+                Submission submission = JsonSerializer.Deserialize<Submission>(strData1, options);
+
             }
 
             return View(submitData);
@@ -56,7 +60,16 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Teacher(int id)
         {
-            return View();
+            var userId = int.Parse(HttpContext.Session.GetString("userId"));
+            HttpResponseMessage response = await client.GetAsync(apiurl+ "Submission/GetSubmission?assignmentid="+id);
+            string strData = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
+            List<Submission> submissions = JsonSerializer.Deserialize<List<Submission>>(strData, options);
+
+            return View(submissions);
 
         }
 
