@@ -21,6 +21,7 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             var userId = int.Parse(HttpContext.Session.GetString("userId"));
             ClassApiUrl = $"https://localhost:7158/api/Class/userId/{userId}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
@@ -38,6 +39,7 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Create()
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             return View();
         }
 
@@ -45,6 +47,7 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Class cl)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             cl.ClassId = 0;
             var payload = JsonSerializer.Serialize(cl);
 
@@ -57,6 +60,7 @@ namespace CMS_Client.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             ClassApiUrl = $"https://localhost:7158/api/Class/?id={id}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
@@ -73,6 +77,7 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(IFormCollection collection)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             Class cl = new Class();
             cl.ClassId = Int32.Parse(collection["ClassId"]);
             cl.ClassCode = collection["ClassCode"];
@@ -115,6 +120,7 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
             HttpResponseMessage response = await client.DeleteAsync(ClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();

@@ -24,6 +24,7 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(apiurl + "Assignment/Detail/" + id);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -60,6 +61,7 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Teacher(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             var userId = int.Parse(HttpContext.Session.GetString("userId"));
             HttpResponseMessage response = await client.GetAsync(apiurl+ "Submission/GetSubmission?assignmentid="+id);
             string strData = await response.Content.ReadAsStringAsync();

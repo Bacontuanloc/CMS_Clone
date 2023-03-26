@@ -23,6 +23,7 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<IActionResult> Index(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(apiurl+ "/Assignment/" + id);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -33,10 +34,18 @@ namespace CMS_Client.Controllers
 
             HttpResponseMessage response2 = await client.GetAsync(apiurl + "/Material/GetMaterials?classid=" + id);
             string strData2 = await response2.Content.ReadAsStringAsync();
-
             List<Material> materials = JsonSerializer.Deserialize<List<Material>>(strData2, options);
+
+            HttpResponseMessage response3 = await client.GetAsync(apiurl + "/UserClass/classId/" + id);
+            string strData3 = await response3.Content.ReadAsStringAsync();
+            List<UserClass> listUserClass = JsonSerializer.Deserialize<List<UserClass>>(strData3, options);
+            List<int> listTeacher = new List<int>();
+            foreach(UserClass uc in listUserClass){
+                listTeacher.Add(uc.UserId);
+            }
             ViewData["classID"] = id;
             ViewBag.material = materials;
+            ViewBag.listTeacher = listTeacher;
             return View(listAss);
 
         }
@@ -44,6 +53,7 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<ActionResult> Edit(int classId, int assignmentId)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             apiurl = $"https://localhost:7158/api/Assignment/classId/{classId}/assignmentId/{assignmentId}";
             HttpResponseMessage response = await client.GetAsync(apiurl);
             string strData = await response.Content.ReadAsStringAsync();
@@ -60,11 +70,13 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<IActionResult> Create(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             return View(id);
         }
         [HttpGet()]
         public async Task<IActionResult> CreateMaterial(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             return View(id);
         }
     }

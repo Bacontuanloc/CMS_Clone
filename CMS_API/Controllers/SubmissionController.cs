@@ -9,6 +9,7 @@ using System.Drawing;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class SubmissionController : ControllerBase

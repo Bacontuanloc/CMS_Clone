@@ -12,6 +12,11 @@ namespace CMS_API.Repositories
             UserClassDAO.DeleteUserClass(c);
         }
 
+        public List<UserClass> FindUserClassByClassId(int classId)
+        {
+            return UserClassDAO.FindUserClassByClassId(classId);
+        }
+
         public UserClass FindUserClassById(int id)
         {
             return UserClassDAO.FindUserClassById(id);

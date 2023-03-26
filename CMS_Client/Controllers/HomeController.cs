@@ -29,14 +29,7 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
-            //string strData = await response.Content.ReadAsStringAsync();
-            //var options = new JsonSerializerOptions
-            //{
-            //    PropertyNameCaseInsensitive = true,
-            //};
-            //List<Class> listClasses = JsonSerializer.Deserialize<List<Class>>(strData, options);
-
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(UserClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -44,11 +37,11 @@ namespace CMS_Client.Controllers
                 PropertyNameCaseInsensitive = true,
             };
             List<UserClass> listUserClass = JsonSerializer.Deserialize<List<UserClass>>(strData, options);
-
             return View(listUserClass);
         }
         public async Task<IActionResult> Create()
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(UserApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -63,6 +56,7 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Class cl, IFormCollection collection)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Save Class
             cl.ClassId = 0;
             var payload = JsonSerializer.Serialize(cl);
@@ -95,6 +89,7 @@ namespace CMS_Client.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Get UserClass By ID
             UserClassApiUrl = $"https://localhost:7158/api/UserClass/id/{id}";
             HttpResponseMessage response = await client.GetAsync(UserClassApiUrl);
@@ -122,6 +117,7 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(IFormCollection collection)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Upate Class
             Class cl = new Class();
             cl.ClassId = Int32.Parse(collection["ClassId"]);
@@ -146,6 +142,7 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Get Class By UserClass ID
             ClassApiUrl = $"https://localhost:7158/api/Class/userClassId/{id}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);

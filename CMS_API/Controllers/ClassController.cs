@@ -3,9 +3,11 @@ using CMS_API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CMS_API.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassController : ControllerBase

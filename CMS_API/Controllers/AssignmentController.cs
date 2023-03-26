@@ -9,6 +9,7 @@ using System.Diagnostics.Metrics;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AssignmentController : ControllerBase

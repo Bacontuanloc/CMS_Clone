@@ -2,11 +2,13 @@
 using CMS_API.Models;
 using CMS_API.Repositories;
 using CMS_API.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserClassController : ControllerBase
@@ -24,6 +26,12 @@ namespace CMS_API.Controllers
         public ActionResult<UserClass> FindUserClassById(int id)
         {
             return Ok(repository.FindUserClassById(id));
+        }
+
+        [HttpGet("classId/{classId}")]
+        public ActionResult<List<UserClass>> FindUserClassByClassId(int classId)
+        {
+            return Ok(repository.FindUserClassByClassId(classId));
         }
 
         [HttpPost]

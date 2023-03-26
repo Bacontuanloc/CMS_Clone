@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

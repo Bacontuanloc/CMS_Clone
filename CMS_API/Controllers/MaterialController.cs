@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CMS_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class MaterialController : ControllerBase

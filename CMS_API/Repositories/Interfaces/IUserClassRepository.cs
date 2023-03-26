@@ -7,6 +7,7 @@ namespace CMS_API.Repositories.Interfaces
     {
         List<UserClass> GetUserClass();
         UserClass FindUserClassById(int id);
+        List<UserClass> FindUserClassByClassId(int classId);
         void SaveUserClass(UserClassModel c);
         void UpdateUserClass(UserClassModel c);
         void DeleteUserClass(UserClass c);

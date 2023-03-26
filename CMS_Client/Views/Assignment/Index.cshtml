@@ -3,12 +3,14 @@
 @{
     ViewBag.Title = "My Assignments";
     var roleid = int.Parse(Context.Session.GetString("Role"));
+    var userId = int.Parse(Context.Session.GetString("userId"));
+    List<int> listTeacherId = ViewBag.listTeacher;
 }
 
 <div class="container mt-5">
     <h1 class="mb-4">My Assignments</h1>
 
-    @if (roleid == 2)
+    @if (roleid == 2 && listTeacherId.Contains(userId))
     {
         <a href="../CreateMaterial?id=@ViewData["classID"]">
             <Button class="btn btn-primary download-file">Add Material</Button>
@@ -42,7 +44,7 @@
         </div>
     </div>
 
-    @if (roleid == 2)
+    @if (roleid == 2 && listTeacherId.Contains(userId))
     {
         <a href="../Create?id=@ViewData["classID"]">
             <Button class="btn btn-primary download-file">Create</Button>
@@ -61,12 +63,15 @@
                     <th>Assignment Name</th>
                     <th>Description</th>
                     <th>Due Date</th>
-                    @if (roleid <= 2){
+                    @if (roleid == 2 && listTeacherId.Contains(userId))
+                    {
                         <th>Grade</th>
-                    }else{
+                        <th>Edit</th>
+                    }
+                    @if (roleid == 3)
+                    {
                         <th>Detail</th>
                     }
-                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,12 +81,12 @@
                         <td>@assignment.Title</td>
                         <td>@assignment.Description</td>
                         <td>@assignment.Deadline</td>
-                        @if (roleid <= 2)
+                        @if (roleid == 2 && listTeacherId.Contains(userId))
                         {
                             <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Teacher?id=@assignment.AssignmentId">Grade</a></td>
                             <td> <a tabindex="-2" class="btn btn-primary col-6" asp-controller="Assignment" asp-action="Edit" asp-route-classId="@ViewData["classID"]" asp-route-assignmentId="@assignment.AssignmentId">Edit</a></td>
                         }
-                        else
+                        @if (roleid == 3)
                         {
                             <td> <a tabindex="-2" class="btn btn-primary col-6" href="/Submission/Index?id=@assignment.AssignmentId">Detail</a></td>
                         }

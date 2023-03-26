@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home Page";
     var userId = int.Parse(Context.Session.GetString("userId"));
+    var role = int.Parse(Context.Session.GetString("Role"));
 }
 
 <!DOCTYPE html>
@@ -76,8 +77,11 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        @if (role != 1)
+        {
+            <a asp-controller="Class" asp-action="Index" asp-route-id="@userId">My Class</a>
+        }
         <a href="#">Clients</a>
         <a href="#">Contact</a>
     </div>
@@ -86,9 +90,12 @@
         <main role="main" class="pb-3">
             <div class="row mb-4">
                 <h2 class="col-md" style="font-size: xxx-large;">My Class</h2>
-                <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
-                    <a class="btn btn-primary" asp-action="Create" role="button" style="margin-right: 36px;">Create New</a>
-                </div>
+                @if (role == 1)
+                {
+                    <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
+                        <a class="btn btn-primary" asp-action="Create" role="button" style="margin-right: 36px;">Create New</a>
+                    </div>
+                }
             </div>
 
             <div id="cardDeck" class="row row-cols-1 row-cols-md-3">
