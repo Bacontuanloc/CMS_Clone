@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMS_API", "CMS_API\CMS_API.csproj", "{18B70549-F3C3-4C99-B252-9A460E61EDFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS_Client", "CMS_Client\CMS_Client.csproj", "{052C3769-7758-467F-A5E8-7DB5A6733463}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMS_Client", "CMS_Client\CMS_Client.csproj", "{052C3769-7758-467F-A5E8-7DB5A6733463}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,9 +13,11 @@
                     <tr>
                         <th>Student Name</th>                      
                         <th>Submission Date</th>
+                        <th>Submission File</th>
                         <th>Grade</th>
                         <th>Feedback</th>
-                        <th>Submission File</th>
+                        <th></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -25,14 +27,14 @@
                             <td>@submission.OwnerId</td>
                             <td>@submission.SubmissionTime</td>
                             <td>
-                                <input type="number" value=" @submission.Grade" min="0" max="10">
-                               </td>
-                            <td><td>
-                                <input type="text" value=" @submission.Feedback" >
-                               </td></td>
-                            <td>
                                 <button class="btn btn-primary download-file" data-filename="@submission.FilePath">Download</button>
                             </td>
+                             <td><input type="number" name="grade" value="@submission.Grade" /></td>
+                            <td><input type="type" name="feedback" value="@submission.Feedback" /></td>
+                               <td>
+                                 <button class="btn btn-primary submit-btn" data-id="@submission.SubmissionId">Submit</button>
+                               </td>
+                            
                         </tr>
                     }
                 </tbody>
@@ -72,5 +74,28 @@
                 }
             });
         });
+        $('.submit-btn').on('click', function () {
+            var submissionId = $(this).data('id');
+            var grade = $(this).closest('tr').find('input[name=grade]').val();
+            var feedback = $(this).closest('tr').find('input[name=feedback]').val();
+            console.log(grade);
+            console.log(feedback);
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7158/api/Submission/Grade/" + submissionId + "?grade=" + grade + "&feedback=" + feedback,
+                headers: {
+                    "Authorization": "Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()" // set the Authorization header with the auth token
+                },
+                success: function (response) {
+                    console.log("Grade and feedback data submitted successfully!");
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error submitting grade and feedback data: " + error);
+                    console.error(xhr.responseText);
+                }
+            });
+        });
     });
 </script>
+

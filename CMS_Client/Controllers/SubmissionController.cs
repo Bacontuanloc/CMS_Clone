@@ -43,9 +43,10 @@ namespace CMS_Client.Controllers
                 AssignmentId = assignment.AssignmentId,
                 Description = assignment.Description,
                 Title = assignment.Title,
+                Deadline= assignment.Deadline,
                 Submitted = true
             }; 
-            if(strData1 == null) {
+            if(strData1 == null||strData1.Equals("")) {
                 submitData.Submitted= false;
             }
             else
