@@ -6,5 +6,7 @@ namespace CMS_API.Repositories.Interfaces
     {
         List<User> GetUsers();
         User GetUser(string username,string password);
+        List<User> GetAllTeacher();
+        User FindUserByUserId(int id);
     }
 }

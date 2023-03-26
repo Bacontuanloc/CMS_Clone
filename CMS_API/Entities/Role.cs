@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-#nullable disable
+using System.Text.Json.Serialization;
 
 namespace CMS_API.Entities
 {
@@ -13,8 +12,8 @@ namespace CMS_API.Entities
         }
 
         public int RoleId { get; set; }
-        public string RoleName { get; set; }
-
+        public string RoleName { get; set; } = null!;
+        [JsonIgnore]
         public virtual ICollection<User> Users { get; set; }
     }
 }

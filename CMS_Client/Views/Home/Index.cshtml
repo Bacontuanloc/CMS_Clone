@@ -1,5 +1,9 @@
-﻿@{
+﻿@model IEnumerable<CMS_Client.Entities.UserClass>
+
+@{
     ViewData["Title"] = "Home Page";
+    var role = int.Parse(Context.Session.GetString("Role"));
+    var userId = int.Parse(Context.Session.GetString("userId"));
 }
 
 <!DOCTYPE html>
@@ -18,30 +22,42 @@
 
         .sidenav {
             height: 100%;
-            width: 200px;
+            width: 250px;
             position: fixed;
             z-index: 1;
             top: 0;
             left: 0;
-            background-color: #140b5c;
+            background-color: #111;
             overflow-x: hidden;
-            padding-top: 20px;
+            transition: 0.5s;
+            padding-top: 60px;
         }
 
             .sidenav a {
-                padding: 6px 6px 6px 32px;
+                padding: 8px 8px 8px 32px;
                 text-decoration: none;
                 font-size: 25px;
                 color: #818181;
                 display: block;
+                transition: 0.3s;
             }
 
                 .sidenav a:hover {
                     color: #f1f1f1;
                 }
 
-        .main {
-            margin-left: 200px; /* Same as the width of the sidenav */
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+            margin-left: 150px;
         }
 
         @@media screen and (max-height: 450px) {
@@ -53,139 +69,83 @@
                     font-size: 18px;
                 }
         }
+
     </style>
 </head>
 
 <body>
-    <div class="sidenav">
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a asp-action="Index">Home</a>
-        <a href="Class/Index">Class</a>
+        @if (role != 1)
+        {
+            <a asp-controller="Class" asp-action="Index" asp-route-id="@userId">My Class</a>
+        }
+        @if (role == 1)
+        {
+            <a href="#">User Management</a>
+        }
         <a href="#">Clients</a>
         <a href="#">Contact</a>
     </div>
-    <div class="container" style="margin-left:100px">
+    <div class="container" id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
         <main role="main" class="pb-3">
             <div class="row mb-4">
-                <h2 class="col-md">Manage Products</h2>
+                <h2 class="col-md" style="font-size: xxx-large;">All Classes</h2>
                 <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
-                    <a class="btn btn-primary" href="create.html" role="button">Create New</a>
+                    <a class="btn btn-primary" asp-action="Create" role="button" style="margin-right: 36px;">Create New</a>
                 </div>
             </div>
 
             <div id="cardDeck" class="row row-cols-1 row-cols-md-3">
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7">a</span>
-                                <span class="placeholder col-4">b</span>
-                                <span class="placeholder col-4">c</span>
-                                <span class="placeholder col-6">d</span>
-                                <span class="placeholder col-8">e</span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
+                @foreach (var item in Model)
+                {
+                    <div class="col mb-3" style="width: 32%;">
+                        <div class="card" aria-hidden="true">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.Class.ClassCode)</span>
+                                </h5>
+                                <p class="card-text">
+                                    <span class="col-8">Teacher: @Html.DisplayFor(modelItem => item.User.Fullname)</span>
+                                </p>
+                                <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
+                                    <span class="col-8">@Html.DisplayFor(modelItem => item.Class.Description)</span>
+                                </p>
+                                @if (role == 1)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" style="width: 150px;margin-left: 10px;" class="btn btn-primary col mb-6">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" style="width: 150px;margin-left: 30px;" class="btn btn-primary col mb-6">Delete</a>
+                                }
+                                else if (role == 2)
+                                {
+                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Detail</a>
+                                }
+                                else
+                                {
+                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Enroll</a>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-6"></span>
-                                <span class="placeholder col-8"></span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-6"></span>
-                                <span class="placeholder col-8"></span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-6"></span>
-                                <span class="placeholder col-8"></span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-6"></span>
-                                <span class="placeholder col-8"></span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-3">
-                    <div class="card" aria-hidden="true">
-                        <div class="card-body">
-                            <h5 class="card-title placeholder-glow">
-                                <span class="placeholder col-6"></span>
-                            </h5>
-                            <p class="card-text placeholder-glow">
-                                <span class="placeholder col-7"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-4"></span>
-                                <span class="placeholder col-6"></span>
-                                <span class="placeholder col-8"></span>
-                            </p>
-                            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
-                        </div>
-                    </div>
-                </div>
-
+                }
             </div>
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="assets/lib/jquery/jquery.min.js"></script>
-    <script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/site.js"></script>
-    <script src="assets/js/index.js"></script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "150px";
+        }
 
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
 </body>
 
 </html>

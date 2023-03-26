@@ -5,5 +5,6 @@ namespace CMS_API.Repositories.Interfaces
     public interface IRoleRepository
     {
         List<Role> GetRoles();
+        Role FindRoleByRoleId(int id);
     }
 }

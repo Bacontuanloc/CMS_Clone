@@ -1,5 +1,7 @@
 ﻿using CMS_API.Entities;
 using CMS_API.Models;
+using CMS_API.Repositories;
+using CMS_API.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ namespace CMS_API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private IUserRepository repository = new UserRepository();
 
         [HttpGet("Teacher")]
         [Authorize(Roles = "2")]
@@ -62,6 +65,18 @@ namespace CMS_API.Controllers
                 };
             }
             return null;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<User>> GetAllTeacher()
+        {
+            return Ok(repository.GetAllTeacher());
+        }
+
+        [HttpGet("userId/{userId}")]
+        public ActionResult<User> FindUserByUserId(int userId)
+        {
+            return Ok(repository.FindUserByUserId(userId));
         }
     }
 }

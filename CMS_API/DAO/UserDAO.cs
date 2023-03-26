@@ -38,5 +38,38 @@ namespace CMS_API.DAO
             }
             return user;
         }
+
+        public static List<User> GetAllTeacher()
+        {
+            var listTeachers = new List<User>();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    listTeachers = context.Users.Where(u => u.RoleId == 2).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return listTeachers;
+        }
+        public static User FindUserByUserId(int id)
+        {
+            User u = new User();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    u = context.Users.Where(u => u.UserId == id).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return u;
+        }
     }
 }

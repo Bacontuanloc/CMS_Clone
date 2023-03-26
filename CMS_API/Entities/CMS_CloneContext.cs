@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace CMS_API.Entities
 {
@@ -17,29 +16,25 @@ namespace CMS_API.Entities
         {
         }
 
-        public virtual DbSet<Assignment> Assignments { get; set; }
-        public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<Grade> Grades { get; set; }
-        public virtual DbSet<Material> Materials { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Submission> Submissions { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserClass> UserClasses { get; set; }
+        public virtual DbSet<Assignment> Assignments { get; set; } = null!;
+        public virtual DbSet<Class> Classes { get; set; } = null!;
+        public virtual DbSet<Material> Materials { get; set; } = null!;
+        public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<Submission> Submissions { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserClass> UserClasses { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string constr = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().
-                                    GetConnectionString("MyDB").ToString();
-                optionsBuilder.UseSqlServer(constr);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =LAPTOP-4207VOG8\\SQLEXPRESS; database =CMS_Clone;uid=sa;pwd=quangkm123;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Assignment>(entity =>
             {
                 entity.ToTable("Assignment");
@@ -60,7 +55,6 @@ namespace CMS_API.Entities
                 entity.Property(e => e.OwnerId).HasColumnName("owner_id");
 
                 entity.Property(e => e.Title)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("title");
@@ -69,13 +63,13 @@ namespace CMS_API.Entities
                     .WithMany(p => p.Assignments)
                     .HasForeignKey(d => d.ClassId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Assignmen__class__1CF15040");
+                    .HasConstraintName("FK__Assignmen__class__1DE57479");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Assignments)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Assignmen__owner__1DE57479");
+                    .HasConstraintName("FK__Assignmen__owner__1ED998B2");
             });
 
             modelBuilder.Entity<Class>(entity =>
@@ -85,7 +79,6 @@ namespace CMS_API.Entities
                 entity.Property(e => e.ClassId).HasColumnName("class_id");
 
                 entity.Property(e => e.ClassCode)
-                    .IsRequired()
                     .HasMaxLength(25)
                     .IsUnicode(false)
                     .HasColumnName("class_code");
@@ -94,28 +87,6 @@ namespace CMS_API.Entities
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("description");
-            });
-
-            modelBuilder.Entity<Grade>(entity =>
-            {
-                entity.ToTable("Grade");
-
-                entity.Property(e => e.GradeId).HasColumnName("grade_id");
-
-                entity.Property(e => e.Feedback)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasColumnName("feedback");
-
-                entity.Property(e => e.Grade1).HasColumnName("grade");
-
-                entity.Property(e => e.SubmissionId).HasColumnName("submission_id");
-
-                entity.HasOne(d => d.Submission)
-                    .WithMany(p => p.Grades)
-                    .HasForeignKey(d => d.SubmissionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Grade__submissio__24927208");
             });
 
             modelBuilder.Entity<Material>(entity =>
@@ -132,7 +103,6 @@ namespace CMS_API.Entities
                     .HasColumnName("file_path");
 
                 entity.Property(e => e.Title)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("title");
@@ -141,7 +111,7 @@ namespace CMS_API.Entities
                     .WithMany(p => p.Materials)
                     .HasForeignKey(d => d.ClassId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Material__class___1A14E395");
+                    .HasConstraintName("FK__Material__class___1B0907CE");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -149,7 +119,6 @@ namespace CMS_API.Entities
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
                 entity.Property(e => e.RoleName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("role_name");
@@ -163,10 +132,17 @@ namespace CMS_API.Entities
 
                 entity.Property(e => e.AssignmentId).HasColumnName("assignment_id");
 
+                entity.Property(e => e.Feedback)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false)
+                    .HasColumnName("feedback");
+
                 entity.Property(e => e.FilePath)
                     .HasMaxLength(1000)
                     .IsUnicode(false)
                     .HasColumnName("file_path");
+
+                entity.Property(e => e.Grade).HasColumnName("grade");
 
                 entity.Property(e => e.OwnerId).HasColumnName("owner_id");
 
@@ -178,13 +154,13 @@ namespace CMS_API.Entities
                     .WithMany(p => p.Submissions)
                     .HasForeignKey(d => d.AssignmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Submissio__assig__20C1E124");
+                    .HasConstraintName("FK__Submissio__assig__21B6055D");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Submissions)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Submissio__owner__21B6055D");
+                    .HasConstraintName("FK__Submissio__owner__22AA2996");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -197,13 +173,11 @@ namespace CMS_API.Entities
                     .HasColumnName("email");
 
                 entity.Property(e => e.Fullname)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("fullname");
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("password");
@@ -216,13 +190,11 @@ namespace CMS_API.Entities
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
                 entity.Property(e => e.UserCode)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("user_code");
 
                 entity.Property(e => e.Username)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("username");
@@ -236,25 +208,25 @@ namespace CMS_API.Entities
 
             modelBuilder.Entity<UserClass>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("UserClass");
+
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.ClassId).HasColumnName("class_id");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.Class)
-                    .WithMany()
+                    .WithMany(p => p.UserClasses)
                     .HasForeignKey(d => d.ClassId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserClass__class__173876EA");
+                    .HasConstraintName("FK__UserClass__class__182C9B23");
 
                 entity.HasOne(d => d.User)
-                    .WithMany()
+                    .WithMany(p => p.UserClasses)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserClass__user___164452B1");
+                    .HasConstraintName("FK__UserClass__user___173876EA");
             });
 
             OnModelCreatingPartial(modelBuilder);

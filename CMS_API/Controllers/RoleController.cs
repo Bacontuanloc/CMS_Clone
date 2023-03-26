@@ -18,5 +18,11 @@ namespace CMS_API.Controllers
         {
             return repository.GetRoles();
         }
+
+        [HttpGet("roleId/{roleId}")]
+        public ActionResult<User> FindUserByUserId(int roleId)
+        {
+            return Ok(repository.FindRoleByRoleId(roleId));
+        }
     }
 }

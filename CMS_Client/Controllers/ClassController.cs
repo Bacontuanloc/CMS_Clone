@@ -21,6 +21,8 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = int.Parse(HttpContext.Session.GetString("userId"));
+            ClassApiUrl = $"https://localhost:7158/api/Class/userId/{userId}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -29,7 +31,6 @@ namespace CMS_Client.Controllers
             };
             List<Class> listClasses = JsonSerializer.Deserialize<List<Class>>(strData, options);
 
-            var userId = int.Parse(HttpContext.Session.GetString("userId"));
             ViewBag.userId = userId;
 
             return View(listClasses);
@@ -56,7 +57,7 @@ namespace CMS_Client.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
+            ClassApiUrl = $"https://localhost:7158/api/Class/?id={id}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
 

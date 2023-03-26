@@ -1,7 +1,8 @@
-﻿@model IEnumerable<CMS_Client.Entities.Class>
+﻿@model CMS_Client.Entities.UserClass
 
 @{
     ViewData["Title"] = "Home Page";
+    var role = int.Parse(Context.Session.GetString("Role"));
     var userId = int.Parse(Context.Session.GetString("userId"));
 }
 
@@ -76,54 +77,53 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a asp-action="Index">Home</a>
+        @if (role != 1)
+        {
+            <a asp-controller="Class" asp-action="Index" asp-route-id="@userId">My Class</a>
+        }
+        @if (role == 1)
+        {
+            <a href="#">User Management</a>
+        }
         <a href="#">Clients</a>
         <a href="#">Contact</a>
     </div>
     <div class="container" id="main">
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-        <main role="main" class="pb-3">
-            <div class="row mb-4">
-                <h2 class="col-md" style="font-size: xxx-large;">My Class</h2>
-                <div class="col-md d-md-flex justify-content-md-end align-items-center me-md-3">
-                    <a class="btn btn-primary" asp-action="Create" role="button" style="margin-right: 36px;">Create New</a>
-                </div>
+        <form method="post">
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="ClassId" id="exampleFormControlInput1" value="@Model.ClassId">
             </div>
-
-            <div id="cardDeck" class="row row-cols-1 row-cols-md-3">
-                @foreach (var item in Model)
-                {
-                    <div class="col mb-3" style="width: 32%;">
-                        <div class="card" aria-hidden="true">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.ClassCode)</span>
-                                </h5>
-                                <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
-                                    <span class="col-8">@Html.DisplayFor(modelItem => item.Description)</span>
-                                </p>
-                                @if (userId == 1)
-                                {
-                                    <a asp-action="Edit" asp-route-id="@item.ClassId" style="width: 150px;margin-left: 10px;" class="btn btn-primary col mb-6">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.ClassId" style="width: 150px;margin-left: 30px;" class="btn btn-primary col mb-6">Delete</a>
-                                }
-                                else if (userId == 2)
-                                {
-                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Detail</a>
-                                }
-                                else
-                                {
-                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Enroll</a>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
+            <div class="form-group" hidden>
+                <input type="text" class="form-control" name="UserClassId" id="exampleFormControlInput1" value="@Model.Id">
             </div>
-        </main>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Class code</label>
+                <input type="text" class="form-control" name="ClassCode" id="exampleInputEmail1" placeholder="Enter class code" value="@Model.Class.ClassCode" style="margin-top:5px;width: 50%;">
+            </div>
+            <div class="form-group" style="margin-top:20px">
+                <label for="exampleFormControlSelect1">Category</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="TeacherId" style="margin-top:5px;width: 50%;">
+                    @foreach (var item in ViewBag.listTeacher)
+                    {
+                        <option value="@item.UserId" selected="@(Model.User.UserId == item.UserId)">@item.Fullname</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:20px">
+                <label for="exampleInputPassword1">Description</label>
+                <textarea class="form-control" name="Description" id="exampleInputPassword1" placeholder="Description" style="margin-top:5px;width: 50%;">@Model.Class.Description</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px">Submit</button>
+        </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/lib/jquery/jquery.min.js"></script>
+    <script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/site.js"></script>
+    <script src="assets/js/index.js"></script>
     <script>
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
@@ -135,6 +135,7 @@
             document.getElementById("main").style.marginLeft = "0";
         }
     </script>
+
 </body>
 
 </html>

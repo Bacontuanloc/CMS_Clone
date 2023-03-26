@@ -11,6 +11,7 @@ namespace CMS_API.Controllers
     public class ClassController : ControllerBase
     {
         private IClassRepository repository = new ClassRepository();
+        private IUserClassRepository repositoryUserClass = new UserClassRepository();
 
         [HttpGet]
         public ActionResult<IEnumerable<Class>> GetClasses()
@@ -18,29 +19,29 @@ namespace CMS_API.Controllers
             return Ok(repository.GetClasses());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public ActionResult<Class> FindClassById(int id)
         {
             return Ok(repository.FindClassById(id));
         }
 
-        //[HttpGet("{code}")]
-        //public ActionResult<IEnumerable<Class>> FindClassByClassCode(string code)
-        //{
-        //    return Ok(repository.FindClassByClassCode(code));
-        //}
+        [HttpGet("code/{code}")]
+        public ActionResult<Class> FindClassByClassCode(string code)
+        {
+            return Ok(repository.FindClassByClassCode(code));
+        }
 
-        //[HttpGet("{studentId}")]
-        //public ActionResult<IEnumerable<Class>> FindClassByStudentId(int studentId)
-        //{
-        //    return Ok(repository.FindClassByStudentId(studentId));
-        //}
+        [HttpGet("userId/{userId}")]
+        public ActionResult<IEnumerable<Class>> FindClassByUserId(int userId)
+        {
+            return Ok(repository.FindClassByUserId(userId));
+        }
 
-        //[HttpGet("{teacherId}")]
-        //public ActionResult<IEnumerable<Class>> FindClassByTeacherId(int teacherId)
-        //{
-        //    return Ok(repository.FindClassByStudentId(teacherId));
-        //}
+        [HttpGet("userClassId/{userClassId}")]
+        public ActionResult<IEnumerable<Class>> FindClassByUserClassId(int userClassId)
+        {
+            return Ok(repository.FindClassByUserClassId(userClassId));
+        }
 
         [HttpPost]
         public IActionResult SaveClass(Class c)

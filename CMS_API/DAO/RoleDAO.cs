@@ -21,5 +21,21 @@ namespace CMS_API.DAO
             }
             return listRoles;
         }
+        public static Role FindRoleByRoleId(int id)
+        {
+            Role r = new Role();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    r = context.Roles.Where(r => r.RoleId == id).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return r;
+        }
     }
 }

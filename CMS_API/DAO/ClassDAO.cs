@@ -38,14 +38,30 @@ namespace CMS_API.DAO
             }
             return c;
         }
-        public static List<Class> FindClassByClassCode(string code)
+        public static Class FindClassByClassCode(string code)
+        {
+            Class c = new Class();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    c = context.Classes.Where(c => c.ClassCode.ToLower().Equals(code.ToLower())).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return c;
+        }
+        public static List<Class> FindClassByUserId(int id)
         {
             var listClasses = new List<Class>();
             try
             {
                 using (var context = new CMS_CloneContext())
                 {
-                    listClasses = context.Classes.Where(c => c.ClassCode.ToLower().Equals(code.ToLower())).ToList();
+                    listClasses = context.UserClasses.Include(uc => uc.User).Include(c => c.Class).Where(uc => uc.UserId == id).Select(uc => uc.Class).ToList();
                 }
             }
             catch (Exception e)
@@ -54,37 +70,21 @@ namespace CMS_API.DAO
             }
             return listClasses;
         }
-        public static List<Class> FindClassByStudentId(int id)
+        public static Class FindClassByUserClassId(int id)
         {
-            var listClasses = new List<Class>();
+            Class c = new Class();
             try
             {
                 using (var context = new CMS_CloneContext())
                 {
-                    listClasses = context.UserClasses.Include(uc => uc.User).ThenInclude(u => u.Role).Include(uc => uc.Class).Where(uc => uc.UserId == id && uc.User.Role.RoleName.Equals("Student")).Select(uc => uc.Class).ToList();
+                    c = context.UserClasses.Where(uc => uc.Id == id).Select(c => c.Class).FirstOrDefault();
                 }
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-            return listClasses;
-        }
-        public static List<Class> FindClassByTeacherId(int id)
-        {
-            var listClasses = new List<Class>();
-            try
-            {
-                using (var context = new CMS_CloneContext())
-                {
-                    listClasses = context.UserClasses.Include(uc => uc.User).ThenInclude(u => u.Role).Include(uc => uc.Class).Where(uc => uc.UserId == id && uc.User.Role.RoleName.Equals("Teacher")).Select(uc => uc.Class).ToList();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-            return listClasses;
+            return c;
         }
         public static void SaveClass(Class c)
         {
