@@ -4,6 +4,7 @@
     ViewData["Title"] = "Home Page";
     var role = int.Parse(Context.Session.GetString("Role"));
     var userId = int.Parse(Context.Session.GetString("userId"));
+    List<int> listClassIdOfStudent = ViewBag.listClassIdOfStudent;
 }
 
 <!DOCTYPE html>
@@ -101,34 +102,37 @@
             <div id="cardDeck" class="row row-cols-1 row-cols-md-3">
                 @foreach (var item in Model)
                 {
-                    <div class="col mb-3" style="width: 32%;">
-                        <div class="card" aria-hidden="true">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.Class.ClassCode)</span>
-                                </h5>
-                                <p class="card-text">
-                                    <span class="col-8">Teacher: @Html.DisplayFor(modelItem => item.User.Fullname)</span>
-                                </p>
-                                <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
-                                    <span class="col-8">@Html.DisplayFor(modelItem => item.Class.Description)</span>
-                                </p>
-                                @if (role == 1)
-                                {
-                                    <a asp-action="Edit" asp-route-id="@item.Id" style="width: 150px;margin-left: 10px;" class="btn btn-primary col mb-6">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" style="width: 150px;margin-left: 30px;" class="btn btn-primary col mb-6">Delete</a>
-                                }
-                                else if (role == 2)
-                                {
-                                    <a href="../Assignment/Index/?id=@Html.DisplayFor(modelItem => item.ClassId)" tabindex="-1" class="btn btn-primary col-6">Detail</a>
-                                }
-                                else
-                                {
-                                    <a href="#" tabindex="-1" class="btn btn-primary col-6">Enroll</a>
-                                }
+                    if (!listClassIdOfStudent.Contains(item.ClassId))
+                    {
+                        <div class="col mb-3" style="width: 32%;">
+                            <div class="card" aria-hidden="true">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <span class="col-6" style="font-size: xx-large;">@Html.DisplayFor(modelItem => item.Class.ClassCode)</span>
+                                    </h5>
+                                    <p class="card-text">
+                                        <span class="col-8">Teacher: @Html.DisplayFor(modelItem => item.User.Fullname)</span>
+                                    </p>
+                                    <p class="card-text" style="white-space: nowrap;width: auto;overflow: hidden;text-overflow: ellipsis">
+                                        <span class="col-8">@Html.DisplayFor(modelItem => item.Class.Description)</span>
+                                    </p>
+                                    @if (role == 1)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" style="width: 150px;margin-left: 10px;" class="btn btn-primary col mb-6">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" style="width: 150px;margin-left: 30px;" class="btn btn-primary col mb-6">Delete</a>
+                                    }
+                                    else if (role == 2)
+                                    {
+                                        <a href="../Assignment/Index/?id=@Html.DisplayFor(modelItem => item.ClassId)" tabindex="-1" class="btn btn-primary col-6">Detail</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Enroll" asp-route-userId="@userId" asp-route-classId="@item.ClassId" class="btn btn-primary col-6">Enroll</a>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         </main>

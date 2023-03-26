@@ -37,6 +37,18 @@ namespace CMS_Client.Controllers
                 PropertyNameCaseInsensitive = true,
             };
             List<UserClass> listUserClass = JsonSerializer.Deserialize<List<UserClass>>(strData, options);
+            //Get list of classid of userid
+            var userId = int.Parse(HttpContext.Session.GetString("userId"));
+            UserClassApiUrl = $"https://localhost:7158/api/UserClass/userId/{userId}";
+            HttpResponseMessage responseUserClass = await client.GetAsync(UserClassApiUrl);
+            string strDataUserClass = await responseUserClass.Content.ReadAsStringAsync();
+            List<UserClass> list = JsonSerializer.Deserialize<List<UserClass>>(strDataUserClass, options);
+            List<int> listClassIdOfStudent = new List<int>();
+            foreach (UserClass userClass in list)
+            {
+                listClassIdOfStudent.Add(userClass.ClassId);
+            }
+            ViewBag.listClassIdOfStudent = listClassIdOfStudent;
             return View(listUserClass);
         }
         public async Task<IActionResult> Create()
@@ -161,6 +173,22 @@ namespace CMS_Client.Controllers
             //ClassApiUrl = $"https://localhost:7158/api/Class/{c.ClassId}";
             //HttpResponseMessage responseClass = await client.DeleteAsync(ClassApiUrl);
             //string strDataClass = await responseClass.Content.ReadAsStringAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> Enroll(int userId, int classId)
+        {
+            //Add UserClass
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
+            UserClassModel uc = new UserClassModel();
+            uc.Id = 0;
+            uc.UserId = userId;
+            uc.ClassId = classId;
+            var payloadUserClass = JsonSerializer.Serialize(uc);
+            HttpContent hc = new StringContent(payloadUserClass, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseUserClass = await client.PostAsync(UserClassApiUrl, hc);
+            string strDataUserClass = await responseUserClass.Content.ReadAsStringAsync();
+            //Get list ClassId of student
 
             return RedirectToAction("Index", "Home");
         }

@@ -22,6 +22,11 @@ namespace CMS_API.Repositories
             return UserClassDAO.FindUserClassById(id);
         }
 
+        public List<UserClass> FindUserClassByUserId(int userId)
+        {
+            return UserClassDAO.FindUserClassByUserId(userId);
+        }
+
         public List<UserClass> GetUserClass()
         {
             return UserClassDAO.GetUserClass();

@@ -54,6 +54,22 @@ namespace CMS_API.DAO
             }
             return list;
         }
+        public static List<UserClass> FindUserClassByUserId(int userId)
+        {
+            List<UserClass> list = new List<UserClass>();
+            try
+            {
+                using (var context = new CMS_CloneContext())
+                {
+                    list = context.UserClasses.Include(u => u.User).Where(uc => uc.UserId == userId).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return list;
+        }
         public static void SaveUserClass(UserClassModel c)
         {
             UserClass uc = new UserClass();

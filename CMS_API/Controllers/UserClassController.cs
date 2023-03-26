@@ -34,8 +34,14 @@ namespace CMS_API.Controllers
             return Ok(repository.FindUserClassByClassId(classId));
         }
 
+        [HttpGet("userId/{userId}")]
+        public ActionResult<List<UserClass>> FindUserClassByUserId(int userId)
+        {
+            return Ok(repository.FindUserClassByUserId(userId));
+        }
+
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "1,3")]
         public IActionResult SaveUserClass(UserClassModel c)
         {
             repository.SaveUserClass(c);
