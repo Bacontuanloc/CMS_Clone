@@ -1,0 +1,43 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submissions List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Submissions List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User Code</th>
+                    <th>User Name</th>
+                    <th>Assignment</th>
+                    <th>File</th>
+                    <th>Grade</th>
+                    <th>FeedBack</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var submission in Model)
+                {
+                    <tr>
+                        <td>@submission.UserCode</td>
+                        <td>@submission.UserName</td>
+                        <td>@submission.Assignment</td>
+                        <td>
+                            <a href="@submission.FileUrl">Download File</a>
+                        </td>
+                        <td>@submission.Grade</td>
+                        <td>@submission.FeedBack</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

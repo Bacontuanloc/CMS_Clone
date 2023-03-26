@@ -30,8 +30,16 @@ namespace CMS_Client.Controllers
                 PropertyNameCaseInsensitive = true,
             };
             List<Assignment> listAss = JsonSerializer.Deserialize<List<Assignment>>(strData, options);
-
+            ViewData["classID"] = id;
             return View(listAss);
+
+        }
+
+
+        [HttpGet()]
+        public async Task<IActionResult> Create(int id)
+        {
+            return View(id);
         }
     }
 }

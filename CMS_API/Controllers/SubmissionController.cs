@@ -1,4 +1,5 @@
 ﻿using CMS_API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -9,7 +10,14 @@ namespace CMS_API.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
+        [HttpGet]
+        public ActionResult<Submission> GetAssignmentSubmited(int id,int userid)
+        {
+            CMS_CloneContext context = new CMS_CloneContext();
+            return Ok(context.Submissions.Where(c => c.AssignmentId == id&&c.OwnerId==userid).FirstOrDefault());
+        }
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFile(IFormFile file,[FromForm] int assignmentid,[FromForm] int userid)
@@ -48,6 +56,7 @@ namespace CMS_API.Controllers
                 submission.SubmissionTime = date;
                 submission.FilePath=exactpath;
                 context.Submissions.Add(submission);
+                context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -58,6 +67,7 @@ namespace CMS_API.Controllers
 
 
         [HttpGet]
+
         public async Task<IActionResult> DownloadFile(string filename, int assignmentid, int userid)
         {
             var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);

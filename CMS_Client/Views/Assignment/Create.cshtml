@@ -1,0 +1,110 @@
+﻿@model int
+@{
+    Layout = null;
+    var userid = int.Parse(Context.Session.GetString("userId"));
+}
+
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Submit Assignment</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+    <div class="container">
+        <h1>Submit Assignment</h1>
+
+            <div class="form-group">
+           <input type="hidden" class="form-control" name="owner-id" id="owner-id"  value="@userid">
+
+            </div>
+
+            <div class="form-group">
+        <input type="hidden" class="form-control" name="class-id" id="class-id" value="@Model">
+            </div>
+
+            <div class="form-group">
+                <label for="assignment-title">Assignment Title:</label>
+                <input type="text" class="form-control" name="assignment-title" id="assignment-title" required>
+                <div class="invalid-feedback">
+                    Please provide an assignment title.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="assignment-description">Assignment Description:</label>
+                <textarea class="form-control" name="assignment-description" id="assignment-description" required></textarea>
+                <div class="invalid-feedback">
+                    Please provide an assignment description.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="assignment-deadline">Assignment Deadline:</label>
+                <input type="datetime-local" class="form-control" name="assignment-deadline" id="assignment-deadline" required>
+                <div class="invalid-feedback">
+                    Please provide an assignment deadline.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submit-assignment-btn">Submit Assignment</button>
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#submit-assignment-btn').click(function (e) {
+                e.preventDefault();
+
+                var formData = {
+                classId: $('#class-id').val(),
+                ownerId: $('#owner-id').val(),             
+                title: $('#assignment-title').val(),
+                description: $('#assignment-description').val(),
+                deadline: $('#assignment-deadline').val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://localhost:7158/api/Assignment",
+                    headers: {
+                    "Authorization": "Bearer @Context.Session.GetString("JWT").Replace('"', ' ').Trim().ToString()"
+                },
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function () {
+                        Swal.fire({
+                            title: 'Assignment submitted successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                            window.location.href = '/Assignment/Index/?id=@Model';
+                            }
+                        });
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error submitting assignment!',
+                            text: 'An error occurred while submitting the assignment. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                    });
+        });
+            });
+    </script>
+
+    <script>
+        // Disable form validation on button clicks
+        $('button[type="submit"]').click(function () {
+            $('.needs-validation').removeClass('was-validated');
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

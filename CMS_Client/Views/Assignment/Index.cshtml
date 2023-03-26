@@ -2,15 +2,24 @@
 
 @{
     ViewBag.Title = "My Assignments";
+    var roleid = int.Parse(Context.Session.GetString("Role"));
 }
 
 <div class="container mt-5">
     <h1 class="mb-4">My Assignments</h1>
 
+    @if (roleid == 2)
+    {
+        <a href="../Create?id=@ViewData["classID"]">
+            <input type="button" value="Create" />
+        </a>
+    }
+
     @if (!Model.Any())
     {
         <p>You have no assignments to do.</p>
     }
+   
     else
     {
         <table class="table table-striped">
