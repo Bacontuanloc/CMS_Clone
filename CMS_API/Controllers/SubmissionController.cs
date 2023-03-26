@@ -123,5 +123,20 @@ namespace CMS_API.Controllers
             return Ok(submissions);
         }
 
+        [HttpPost("{submissionid}")]
+
+        public async Task<IActionResult> Grade(int submissionid, int grade, string feedback)
+        {
+            using (var context = new CMS_CloneContext())
+            {
+                var submit = context.Submissions.Where(c => c.SubmissionId == submissionid).FirstOrDefault();
+                submit.Grade=grade;
+                submit.Feedback=feedback;
+                context.Submissions.Update(submit);
+                context.SaveChanges();
+            }
+            return Ok();
+        }
+
     }
 }

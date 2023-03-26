@@ -30,19 +30,30 @@
                  <tr>
                     <th>Assignment Title</th>
                     <th>Assignment Description</th>
+                    <th>Assignment Dealine</th>
                     <th>Your Submit</th>
                     <th></th>
                 </tr>
                     <tr>
                         <td>@Model.Title</td>
                         <td>@Model.Description</td>
+                    <td>@Model.Deadline </td>
                     <td><input type="file" id="fileupload" /></td>
                         <td>
                         @if (Model.Submitted)
                         {
                            <p style="color:green">Submmitted</p>
                         }
-                        <input type="button" value="upload" id="btnupload" />
+                        @if (DateTime.Now < Model.Deadline)
+                        {
+                            <input type="button" value="Upload" id="btnupload" />
+                        }
+                        else{
+
+                            <input type="button" value="Upload" id="btnupload" disabled />
+                        }
+                            
+
                         </td>
                     </tr>
                 
