@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Student Submissions</h2>
+            <h2>Grade Submissions</h2>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -24,7 +24,7 @@
                     @foreach (var submission in Model)
                     {
                         <tr>
-                            <td>@submission.OwnerId</td>
+                            <td>@submission.Owner.Fullname</td>
                             <td>@submission.SubmissionTime</td>
                             <td>
                                 <button class="btn btn-primary download-file" data-filename="@submission.FilePath">Download</button>

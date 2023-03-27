@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using System.Reflection.Emit;
 using System.IO;
 using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMS_API.Controllers
 {
@@ -117,7 +118,7 @@ namespace CMS_API.Controllers
             List<Submission> submissions = new List<Submission>();
             using (var context = new CMS_CloneContext())
             {
-                submissions = context.Submissions.Where(c => c.AssignmentId == assignmentid).ToList();
+                submissions = context.Submissions.Where(c => c.AssignmentId == assignmentid).Include(c=>c.Owner).ToList();
             }
             return Ok(submissions);
         }

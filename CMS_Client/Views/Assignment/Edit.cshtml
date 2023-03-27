@@ -78,7 +78,7 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a asp-action="Index">Home</a>
+        <a asp-controller="Home" asp-action="Index">Home</a>
         @if (role != 1)
         {
             <a asp-controller="Class" asp-action="Index" asp-route-id="@userId">My Class</a>

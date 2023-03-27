@@ -72,9 +72,7 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("JWT");
-            HttpContext.Session.Remove("JWT");
-            HttpContext.Session.Remove("isLoggedIn");
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Login");
         }
     }
