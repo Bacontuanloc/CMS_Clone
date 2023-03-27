@@ -24,6 +24,11 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(apiurl + "Assignment/Detail/" + id);
             string strData = await response.Content.ReadAsStringAsync();
@@ -62,6 +67,11 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Teacher(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             var userId = int.Parse(HttpContext.Session.GetString("userId"));
             HttpResponseMessage response = await client.GetAsync(apiurl+ "Submission/GetSubmission?assignmentid="+id);

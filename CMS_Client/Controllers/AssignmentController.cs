@@ -23,6 +23,11 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<IActionResult> Index(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(apiurl+ "/Assignment/" + id);
             string strData = await response.Content.ReadAsStringAsync();
@@ -53,6 +58,11 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<ActionResult> Edit(int classId, int assignmentId)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             apiurl = $"https://localhost:7158/api/Assignment/classId/{classId}/assignmentId/{assignmentId}";
             HttpResponseMessage response = await client.GetAsync(apiurl);
@@ -70,13 +80,21 @@ namespace CMS_Client.Controllers
         [HttpGet()]
         public async Task<IActionResult> Create(int id)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View(id);
         }
         [HttpGet()]
         public async Task<IActionResult> CreateMaterial(int id)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View(id);
         }
     }

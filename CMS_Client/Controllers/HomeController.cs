@@ -29,6 +29,11 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null )
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(UserClassApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
@@ -53,6 +58,11 @@ namespace CMS_Client.Controllers
         }
         public async Task<IActionResult> Create()
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             HttpResponseMessage response = await client.GetAsync(UserApiUrl);
             string strData = await response.Content.ReadAsStringAsync();
@@ -68,6 +78,11 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Class cl, IFormCollection collection)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Save Class
             cl.ClassId = 0;
@@ -101,6 +116,11 @@ namespace CMS_Client.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Get UserClass By ID
             UserClassApiUrl = $"https://localhost:7158/api/UserClass/id/{id}";
@@ -129,6 +149,11 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(IFormCollection collection)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Upate Class
             Class cl = new Class();
@@ -154,6 +179,11 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             //Get Class By UserClass ID
             ClassApiUrl = $"https://localhost:7158/api/Class/userClassId/{id}";
@@ -178,6 +208,11 @@ namespace CMS_Client.Controllers
         }
         public async Task<IActionResult> Enroll(int userId, int classId)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             //Add UserClass
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             UserClassModel uc = new UserClassModel();
@@ -191,6 +226,14 @@ namespace CMS_Client.Controllers
             //Get list ClassId of student
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Error()
+        {
+
+            //Get list ClassId of student
+
+            return View("Error");
         }
     }
 }

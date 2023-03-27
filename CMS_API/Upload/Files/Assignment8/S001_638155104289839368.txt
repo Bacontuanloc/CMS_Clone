@@ -1,0 +1,3 @@
+dotnet ef dbcontext scaffold "server =LAPTOP-TIGB0QAG\SQLEXPRESS; database =DemoPRN221Fall22;uid=sa;pwd=sa;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
+
+dotnet ef dbcontext scaffold Name=ConnectionStrings:MyStoreDB Microsoft.EntityFrameworkCore.SqlServer --output-dir Models

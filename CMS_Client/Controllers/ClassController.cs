@@ -21,6 +21,11 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Index()
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             var userId = int.Parse(HttpContext.Session.GetString("userId"));
             ClassApiUrl = $"https://localhost:7158/api/Class/userId/{userId}";
@@ -39,7 +44,11 @@ namespace CMS_Client.Controllers
 
         public async Task<IActionResult> Create()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View();
         }
 
@@ -47,6 +56,11 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Class cl)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             cl.ClassId = 0;
             var payload = JsonSerializer.Serialize(cl);
@@ -60,6 +74,11 @@ namespace CMS_Client.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             ClassApiUrl = $"https://localhost:7158/api/Class/?id={id}";
             HttpResponseMessage response = await client.GetAsync(ClassApiUrl);
@@ -77,6 +96,11 @@ namespace CMS_Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(IFormCollection collection)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             Class cl = new Class();
             cl.ClassId = Int32.Parse(collection["ClassId"]);
@@ -120,6 +144,11 @@ namespace CMS_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            String isLoggedIn = (String)HttpContext.Session.GetString("isLoggedIn");
+            if (isLoggedIn == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("JWT"));
             ClassApiUrl = $"https://localhost:7158/api/Class/{id}";
             HttpResponseMessage response = await client.DeleteAsync(ClassApiUrl);
